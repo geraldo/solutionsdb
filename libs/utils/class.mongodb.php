@@ -24,19 +24,20 @@ class MongoDB_invertred{
 
 	private $_conectado;
 	function __construct(){
+		$this->_logger=ErrorLogger::singleton();
 		$system = System::singleton();
 				
 	}
 	public function setDataBD($server,$database,$user,$pwd){
-		$this->_servidor	= $server;
-		$this->_database	= $database;
-		$this->_user		= $user;
-		$this->_password	= $pwd;
+		$this->_servidor=$server;
+		$this->_database=$database;
+		$this->_user=$user;
+		$this->_password=$pwd;
 	}
 	
 	public function fDameId($col){
 	
-		$mongo				= $this->fConecta();
+		$mongo=$this->fConecta();
 		
 		$collection=$mongo->counter;
 		$collection->update(
@@ -60,23 +61,15 @@ class MongoDB_invertred{
 	}
 	
 	public function fConecta(){
-		try{
-			if($this->_user!=""){
-				$con="mongodb://".$this->_user.":".$this->_password."@".$this->_servidor."/".$this->_database;
-			}else{
-				$con=$this->_servidor;
-			}
-			if (class_exists('Mongo')) {
-				$this->m = new Mongo($con); // connect
-		    	$db = $this->m->selectDB($this->_database);
-		    	
-				return $db;
-				}else{
-				return false;
-			}
-		}catch (Exception $e) {
-		   return false;
+		if($this->_user!=""){
+			$con="mongodb://".$this->_user.":".$this->_password."@".$this->_servidor;
+		}else{
+			$con=$this->_servidor;
 		}
+		$this->m = new Mongo($con); // connect
+    	$db = $this->m->selectDB($this->_database);
+    	
+		return $db;
 	}
 	public function fDesconectaMongo(){
 		$this->m->close();

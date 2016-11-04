@@ -6,20 +6,29 @@
  */
 angular.module('app').factory('mapService', map_service);
 
-var map					= null;		//map
-var backgroundMap		= null;		//backgroundMap 1- CartoDB light, 2- CartoDB dark
-var backgroundMapUrl	= 'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-var customLayer			= null;		//wms layer
-var highLightLayer		= null;		//layer for highlighted town
-var highLightSource		= null;		//source for highlifgted polygon
-var viewProjection 		= null;
-var viewResolution 		= null;
-var raster				= null;		//background raster
-var filename 			= "mapService.js";
-var lastMouseMove		= new Date().getTime()+5000;
-var currentLayer		= null;		//current WMS layer
-var urlWMS				= null;		//WMS service url
-var highLightStyle		= null;		//ol.style for highlighted feature
+var map							= null;		//map
+var backgroundMap				= null;		//backgroundMap 1- CartoDB light, 2- CartoDB dark
+var backgroundMapUrl			= 'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+var customLayer					= null;		//wms layer
+var highLightLayer				= null;		//layer for highlighted town
+var highLightSource				= null;		//source for highlifgted polygon
+var viewProjection 				= null;
+var viewResolution 				= null;
+var raster						= null;		//background raster
+var filename 					= "mapService.js";
+var lastMouseMove				= new Date().getTime()+5000;
+var currentLayer				= null;		//current WMS layer
+var urlWMS						= null;		//WMS service url
+var highLightStyle				= null;		//ol.style for highlighted feature
+var currentZoomLevel			= 9;
+var mainLayer					= null;		//main layer, in this case dbwater_rend is a layer that contains layers
+var layers						= null;		//layers contained in mainLayer (dbwater_rend)
+var zoomTrigger					= null;		//zoom level for trigger active layer change
+var activeLayer 				= null;
+var layersForIndentification 	= null;
+var layersStyle					= null;
+var renderedLayers				= Array();
+
 map_service.$inject 	= [ 
     '$http',
     '$rootScope'
@@ -36,15 +45,19 @@ function map_service($http,$rootScope){
 	}
 	
 
-	function init(_urlWMS,_backgroundMap,_layer){
-		log("init("+_urlWMS+","+backgroundMap+","+_layer+")");
+	function init(_urlWMS,_backgroundMap,_layers,_zoomTrigger,_layersForIndentification,_layersStyle){
+		log("init("+_urlWMS+","+backgroundMap+","+_layers+","+_zoomTrigger+","+_layersForIndentification+","+_layersStyle+")");
 		//****************************************************************
     	//***********************      LOAD MAP    ***********************
     	//****************************************************************
-		backgroundMap		= _backgroundMap;
-		urlWMS				= _urlWMS;
-		var projection 		= ol.proj.get('EPSG:4326');
-		var extent    		= [-1.757,40.306,3.335,42.829];
+		backgroundMap				= _backgroundMap;
+		urlWMS						= _urlWMS;
+		zoomTrigger					= _zoomTrigger;
+		layers 						= _layers;
+		layersForIndentification	= _layersForIndentification;
+		layersStyle					= _layersStyle;
+		var projection 				= ol.proj.get('EPSG:4326');
+		var extent    				= [-1.757,40.306,3.335,42.829];
 
 	
 		//background raster
@@ -56,7 +69,7 @@ function map_service($http,$rootScope){
 		
 		  						//extent: extent,
 		  						center: [1.753, 41.600],
-		  						zoom: 9
+		  						zoom: currentZoomLevel
 		});
         						
 
@@ -76,9 +89,15 @@ function map_service($http,$rootScope){
 		viewProjection = view.getProjection();
 		viewResolution = view.getResolution();
 				
-		//WMS Layer
-		renderWMS(_layer);  
-		
+		//WMS Layer - Provincias
+		renderWMS(layers[0],layersStyle[0]);
+		//WMS Layer - Municipios 
+		renderWMS(layers[1],layersStyle[1]); 
+		setActiveLayer(layers[1]);
+		//WMS Layer - Sectores 
+		renderWMS(layers[2],layersStyle[2]); 
+		//WMS Layer - Catastro 
+		renderWMS(layers[3],layersStyle[3]); 
 		//set style for highlighted geometry
 		setHighLightStyle();							
 
@@ -98,59 +117,74 @@ function map_service($http,$rootScope){
     	//****************************************************************
     	//***********************   END CLICK EVENT  *********************
     	//****************************************************************
-		
-		//****************************************************************
-    	//***********************   MOUSE MOVE EVENT  ********************
+    	
     	//****************************************************************
-		
-		map.on('pointermove', function(evt) {
-			
-			if (evt.dragging) {
-				var returnData	= {
-							'show'			: false
-				}
-				$rootScope.$broadcast('displayToolTip',returnData);
-				return;
-			}
-			if(lastMouseMove+1000<new Date().getTime()){
-				lastMouseMove = new Date().getTime();
-				displayFeatureInfo(evt.coordinate);
-			}else{
-				$rootScope.$broadcast('hideToolTip',{});
-			}
-		});
-		//****************************************************************
-    	//*******************   END MOUSE MOVE EVENT  ********************
+    	//******************  EVENT ZOOM LEVEL CHANGE  *******************
     	//****************************************************************
-	}
+    	
+    	map.on('moveend', function(evt){
+	    	var newZoomLevel = map.getView().getZoom();
+	    	if (newZoomLevel != currentZoomLevel){
+		      currentZoomLevel = newZoomLevel;
+		      //log("newZoomLevel: "+newZoomLevel);
+		      if(currentZoomLevel>=zoomTrigger){
+			      setActiveLayer(layers[2]);
+		      }else{
+			      setActiveLayer(layers[1]);
+		      }
 
-	function renderWMS(layer){
+		    }
+	    });
+
+	}
+		    
+
+
+	function renderWMS(layer,style){
 		log("renderWMS("+layer+")");
 		if(currentLayer){
 			map.removeLayer(customLayer);
 		}
 		currentLayer		= layer;
 	    //customLayer (WMS service Aqualia)
-		customLayer 		= new ol.layer.Tile({
+		var newLayer 		= new ol.layer.Tile({
 								source: new ol.source.TileWMS({
 												url: 		urlWMS,
 												tileOptions: {crossOriginKeyword: 'anonymous'},
 												crossOrigin: 'anonymous',
 												params: {
-															'LAYERS'		: currentLayer,
+															'LAYERS'		: layer,
 															'tiled'			: true,
-															'tilesorigin'	: -1.757+","+40.306
+															'tilesorigin'	: -1.757+","+40.306,
+															'STYLES'		: style
 															
         										},
         										serverType: 'geoserver'      										
         								})
     						});
-		map.addLayer(customLayer);
+		map.addLayer(newLayer);
+		renderedLayers.push(newLayer)
+
+	}
+	
+	function setActiveLayer(layerName){
+		log("setActiveLayer("+layerName+")");
+		if(layers.length>0){
+			for (var l = 0; l < layers.length; l++) {
+				if(layerName===layers[l]){
+					activeLayer = renderedLayers[l];
+				}
+			}
+		}else{
+			//default layer "municipios"
+			activeLayer = renderedLayers[1];
+		}
 	}
 
 
 	function displayFeatureInfo(coordinates) {
-		var url		= customLayer.getSource().getGetFeatureInfoUrl(
+
+		var url		= activeLayer.getSource().getGetFeatureInfoUrl(
 							coordinates, viewResolution, viewProjection,
 							{'INFO_FORMAT': 'application/json'}
 					);
@@ -160,6 +194,7 @@ function map_service($http,$rootScope){
 			$http.get(url).success(function(response){
 				var result = parser.readFeatures(response);
 				if(result.length>0){
+					//console.log(result[0])
 					var returnData	= {
 							'nmun_cc'		: result[0].G.nmun_cc,
 							'sub_aqp'		: result[0].G.sub_aqp,
@@ -183,36 +218,39 @@ function map_service($http,$rootScope){
 		if(highLightSource){
 		    	highLightSource.clear();
 		    }
-			var url = customLayer.getSource().getGetFeatureInfoUrl(
+			var url = activeLayer.getSource().getGetFeatureInfoUrl(
 											coordinates, viewResolution, viewProjection,
 											{'INFO_FORMAT': 'application/json'}
 			);
-
 			if (url) {
 			   log("url",url);
 			    var parser = new ol.format.GeoJSON();
-			    $http.get(url).success(function(response){
+			    $http.get(url+"&feature_count=100").success(function(response){
 				   var result = parser.readFeatures(response);
 				   if(result.length>0){
-					  	//console.log(result[0].G)
-					   //************** Highlight town
-					   var feature = new ol.Feature(result[0].G.geometry);
-					   feature.setStyle(highLightStyle);
-					   // Create vector source and the feature to it.
-					   highLightSource = new ol.source.Vector();
-					   highLightSource.addFeature(feature);
-					   // Create vector layer attached to the vector source.
-					   highLightLayer = new ol.layer.Vector({source: highLightSource});
-					   // Add the vector layer to the map.
-					   map.addLayer(highLightLayer);
-					   //************** END Highlight town
-						
-					   //************** Send data to DOM
-					   var returnData	= result[0].G;
-	
-					   //Broadcast event for data rendering
-					   $rootScope.$broadcast('featureInfoReceived',returnData);
-					   //************** END Send data to DOM
+						//AQUALIA towns can be indentified					  
+					  if(result[0].G.sub_aqp==="AQUALIA"){
+						   //************** Highlight town
+						   var feature = new ol.Feature(result[0].G.geometry);
+						   feature.setStyle(highLightStyle);
+						   // Create vector source and the feature to it.
+						   highLightSource = new ol.source.Vector();
+						   highLightSource.addFeature(feature);
+						   // Create vector layer attached to the vector source.
+						   highLightLayer = new ol.layer.Vector({source: highLightSource});
+						   // Add the vector layer to the map.
+						   map.addLayer(highLightLayer);
+						   //************** END Highlight town
+							
+						   //************** Send data to DOM
+						   var returnData	= result[0].G;
+		
+						   //Broadcast event for data rendering
+						   $rootScope.$broadcast('featureInfoReceived',returnData);
+						   //************** END Send data to DOM
+					   }else{
+						   log("selectTown sub_aqp not AQUALIA: "+result[0].G.sub_aqp);
+					   }
 				   }
 				});
         	}	
@@ -266,6 +304,7 @@ function map_service($http,$rootScope){
 		
 		raster.setSource(source);
 	}
+
 
 	//log function
 	function log(evt,data){

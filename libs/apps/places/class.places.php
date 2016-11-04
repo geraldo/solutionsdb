@@ -86,6 +86,7 @@ class Places {
 		$query		= "SELECT cmun5_ine,ST_AsGeoJSON(ST_Envelope(geom)) as bbox, ST_AsGeoJSON(ST_Centroid(geom)) as coords FROM carto.municipios ";
 		if($cmun5_ine===0){
 			$town_name = str_replace("'","''",$town_name);
+			$town_name = str_replace("QT","''",$town_name);
 			$query.= "WHERE nmun_cc='".$town_name."'";
 		}else{
 			$query.= "WHERE cmun5_ine='".$cmun5_ine."'";
@@ -103,7 +104,7 @@ class Places {
 				
 			}
 		}
-		return array("status"=>"Accepted","message"=>$item,"code"=>200);	
+		return array("status"=>"Accepted","message"=>$item,"code"=>200,"query"=>$query);	
 	}
 	
 	//**********************************************************************************************************
@@ -616,6 +617,93 @@ FROM carto.municipios as a LEFT JOIN carto.concesion as b ON a.cmun5_ine=b.cmun5
 	//*****************************        END EXPORT PROVINCE TO CSV	          ******************************
 	//**********************************************************************************************************
 	//**********************************************************************************************************
+	
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+	//*****************************             dbWater PERFORMANCE               ******************************
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+	
+	function dbWaterTownInfo($cmuni5_dgc,$town_name,$initialDate,$finalDate){
+		$query = "SELECT AVG(service_diari.rt_alta)
+FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_service = carto.service_diari.service_code ";
+		
+		if($cmuni5_dgc===0){
+			$town_name = str_replace("'","''",$town_name);
+			$query.= "WHERE nmun_cc='".$town_name."'";
+		}else{
+			$query.= "WHERE cmuni5_dgc='".$cmuni5_dgc."'";
+		}
+		//yesterday
+		$queryDay = $query." AND data BETWEEN CURRENT_DATE - interval '1 days' AND CURRENT_DATE";
+		//echo $finalquery;
+		$rs 			= $this->_system->pdo_select("bd1",$queryDay);
+		$item			= array();
+
+		if(count($rs)>0){
+			$item['day']	= number_format($rs[0]['avg']*100,0);
+		}
+		//last week
+
+		$queryWeek = $query." AND data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryWeek );
+		if(count($rs)>0){
+			$item['week']	= number_format($rs[0]['avg']*100,0);
+		}
+		//last month
+
+		$queryMonth = $query." AND data BETWEEN CURRENT_DATE - interval '30 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryMonth);
+		if(count($rs)>0){
+			$item['month']	= number_format($rs[0]['avg']*100,0);
+		}
+		
+		//last 7 days
+
+		$queryLast7 = "SELECT AVG(service_diari.rt_alta) FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_service = carto.service_diari.service_code WHERE cmuni5_dgc = '".$cmuni5_dgc."' AND data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryLast7);
+		if(count($rs)>0){
+			$item['last7']	= number_format($rs[0]['avg']*100,0);
+		}
+		
+		
+		//volumen suminstrado
+
+		$queryLastVolSum = "SELECT sum_suministrat FROM carto.service_diari AS sd INNER JOIN carto.municipios AS m ON sd.service_code = m.codi_service WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryLastVolSum);
+		if(count($rs)>0){
+			$item['sum_suministrat']	= number_format($rs[0]['sum_suministrat']*100,0);
+		}
+		
+		//Volumen de pérdida diaria
+
+		$queryPerdida = "SELECT sum_rebuig FROM carto.service_diari AS sd INNER JOIN carto.municipios AS m ON sd.service_code = m.codi_service WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryPerdida);
+		if(count($rs)>0){
+			$item['sum_rebuig']	= number_format($rs[0]['sum_rebuig']*100,0);
+		}
+		
+		//Volumen caudal medio
+		$queryCaudalMedio = "SELECT sum_aportat FROM carto.service_diari AS sd INNER JOIN carto.municipios AS m ON sd.service_code = m.codi_service
+WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
+		$rs 		= $this->_system->pdo_select("bd1",$queryCaudalMedio);
+		if(count($rs)>0){
+			$item['sum_aportat']	= number_format($rs[0]['sum_aportat']*100,0);
+		}
+		
+		return array("status"=>"Accepted","message"=>$item,"code"=>200);
+//		return array("status"=>"Accepted","message"=>$item,"code"=>200,"week"=>$queryWeek,"day"=>$queryDay,"month"=>$queryMonth);
+		
+	}
+
+
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+	//*****************************           END  dbWater PERFORMANCE            ******************************
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+
+
 
 }
 ?>

@@ -394,6 +394,7 @@ Controller.$inject = [
 			$scope.edit_town_govern				= data.gobierno;
 
 			if(data.ap_data_ini){
+				data.ap_data_ini 					= data.ap_data_ini .replace('Z','');
 				$scope.edit_town_w_contract_init	= new Date(data.ap_data_ini);
 				$scope.town_w_contract_init			= formatDate(data.ap_data_ini);
 			}else{
@@ -401,6 +402,7 @@ Controller.$inject = [
 				$scope.town_w_contract_init			= "";
 			}
 			if(data.ap_data_fi){
+				data.ap_data_fi 					= data.ap_data_fi .replace('Z','');
 				$scope.edit_town_w_contract_end		= new Date(data.ap_data_fi);
 				$scope.town_w_contract_end			= formatDate(data.ap_data_fi);
 			}else{
@@ -408,6 +410,7 @@ Controller.$inject = [
 				$scope.town_w_contract_end			= "";
 			}
 			if(data.cla_data_ini){
+				data.cla_data_ini 					= data.cla_data_ini .replace('Z','');
 				$scope.edit_town_s_contract_init	= new Date(data.cla_data_ini);
 				$scope.town_s_contract_init			= formatDate(data.cla_data_ini);
 			}else{
@@ -415,13 +418,14 @@ Controller.$inject = [
 				$scope.town_s_contract_init			= "";
 			}
 			if(data.cla_data_fi){
+				data.cla_data_fi 					= data.cla_data_fi .replace('Z','');
 				$scope.edit_town_s_contract_end		= new Date(data.cla_data_fi);
 				$scope.town_s_contract_end			= formatDate(data.cla_data_fi);	
 			}else{
 				$scope.edit_town_s_contract_end		= "";	
 				$scope.town_s_contract_end			= "";	
 			}
-			
+	
 			//deploy info colapse
 			$('.collapseInfo').collapse('show');
 			responsiveService.expandMenu();

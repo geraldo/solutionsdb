@@ -134,9 +134,20 @@
 			vars2send.token			= token;
 			return $http.post(baseHref+'ajax.places.php', vars2send);
 		}
-		return dataFactory;
+
 		
+		//dbWater
+		dataFactory.dbWaterGetTown	= function(id,initialDate,finalDate){
+			var vars2send 			= {};
+			vars2send.id			= id;
+			vars2send.what			= "DBWATER_TOWN_INFO";
+			vars2send.initialDate	= initialDate;
+			vars2send.finalDate		= finalDate;
+			vars2send.token			= token;
+			return $http.post(baseHref+'ajax.places.php', vars2send);
+		}
 		
+		return dataFactory;		
 	}])
 
 })();

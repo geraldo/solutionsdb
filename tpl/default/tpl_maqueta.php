@@ -110,9 +110,10 @@ Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richa
 
 
 
-	<div ng-app="app" ng-controller="mainController as mc" ng-init="initApp('<?php echo $baseHref; ?>')">
-		<div id="map"></div>
-	</div>
+	 <div ng-app="app" ng-controller="mainController as mc" ng-init="initApp('<?php echo $baseHref; ?>')">
+
+		 <div id="map"></div>
+	  </div>
 	  
 	  
 	  
