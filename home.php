@@ -31,7 +31,7 @@ class ControllerIndex{
 		$directory = $this->_system->get('background');
 		$dirint = dir($directory);
 		while (($archivo = $dirint->read()) !== false){
-			if (eregi("gif", $archivo) || eregi("jpg", $archivo) || eregi("png", $archivo)){
+			if (preg_match("/gif/i", $archivo) || preg_match("/jpg/i", $archivo) || preg_match("/png/i", $archivo)){
 				array_push($array_bg, $directory.$archivo);
 			}
         }

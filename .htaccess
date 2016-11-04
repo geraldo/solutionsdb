@@ -13,4 +13,4 @@ RewriteRule ^dbmanager$ dbmanager.php [QSA]
 RewriteRule ^dbquality/$ dbquality.php [QSA]
 RewriteRule ^dbwater$ dbwater.php [QSA]
 
-ErrorDocument 404 http://www.solutionsdb.com/error404.php 
+ErrorDocument 404 http://www.solutionsdb.com/error404.php

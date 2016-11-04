@@ -8,14 +8,14 @@ class ControllerIndex{
 	function __construct()
 	{
 
-		$host		= "localhost";
-		$name		= "test";
-		$user		= "llopez";
-		$pwd		= "";
+		$host		= "db.solutionsdb.net";
+		$name		= "gis_aqualia";
+		$user		= "gisweb";
+		$pwd		= "6t7ygv";
 		require_once 'libs/config.php'; //Archivo con configuraciones.
 	  	$this->_system = System::singleton();//contiene objeto system
 
-	  	$dbconn = pg_connect("host=localhost dbname=test user=llopez password=")
+	  	$dbconn = pg_connect("host=db.solutionsdb.net dbname=gis_aqualia user=gisweb password=6t7ygv")
 	  	or die('No se ha podido conectar: ' . pg_last_error());
 	  	
 	  	

@@ -32,7 +32,14 @@ class ControllerIndex{
 				$id_town     	= (empty($_POST['id'])) 		? 0 	: $this->_system->nohacker($_POST['id']);
 				$town_name      = (empty($_POST['town_name'])) 	? null 	: $this->_system->nohacker($_POST['town_name']);
 				$town			= $places->getTownInfo($id_town,$town_name);
-				echo json_encode($town);		
+				echo json_encode($town);	
+			}else if($what==="DBWATER_TOWN_INFO"){
+				$id_town     	= (empty($_POST['id'])) 			? 0 	: $this->_system->nohacker($_POST['id']);
+				$town_name      = (empty($_POST['town_name'])) 		? null 	: $this->_system->nohacker($_POST['town_name']);
+				$initialDate    = (empty($_POST['initialDate'])) 	? null 	: $this->_system->nohacker($_POST['initialDate']);
+				$finalDate    	= (empty($_POST['finalDate'])) 		? null 	: $this->_system->nohacker($_POST['finalDate']);
+				$town			= $places->dbWaterTownInfo($id_town,$town_name,$initialDate,$finalDate);
+				echo json_encode($town); 
 			}else if($what==="UPDATE_TOWN"){
 				if((int)$_SESSION['update']===1){
 					$id_town    			= (empty($_POST['id_town'])) 				? null : $this->_system->nohacker($_POST['id_town']);
