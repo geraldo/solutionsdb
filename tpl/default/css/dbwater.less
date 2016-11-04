@@ -45,9 +45,10 @@ div.list-with-icon{
     ul, ol{
         display: inline-block;
         border-left: 1px dashed @color-primary;
-        padding-left: 15px;
-        margin-left: 35px;
+        padding-left: 10px;
+        margin-left: 25px;
         margin-bottom: 0;
+        font-size: 11px;
         
         li{
             border-bottom: 1px solid lighten(@color-primary, 35%);
@@ -92,7 +93,7 @@ div.list-with-donut{
 div.list-of-donuts{
     p.title{
         color: @color-primary;
-        margin-top: .5em;
+        margin-top: 0;
         margin-bottom: 0;
     }
 }
@@ -135,7 +136,7 @@ div.table-list{
     border-bottom: none;
     
     >li>a {
-        border-radius: 0;
+        border-radius: 10px 10px 0 0;
         margin-right: -1px;
         border: 1px solid @color-primary;
         color: @color-primary;
@@ -158,11 +159,47 @@ div.table-list{
 }
 
 .tab-content{
-    background-color: lighten(@color-primary, 40%);
+//     background-color: lighten(@color-primary, 40%);
     border: 1px solid @color-primary;
     
     >.tab-pane{
         padding: 15px;
+    }
+}
+
+.row.gutter-0 {
+    margin-left: 0;
+    margin-right: 0;
+    [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.row.gutter-5 {
+    margin-left: -2.5px;
+    margin-right: -2.5px;
+    [class*="col-"] {
+        padding-left: 2.5px;
+        padding-right: 2.5px;
+    }
+}
+
+.row.gutter-10 {
+    margin-left: -5px;
+    margin-right: -5px;
+    [class*="col-"] {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+.row.gutter-20 {
+    margin-left: -10px;
+    margin-right: -10px;
+    [class*="col-"] {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }
 
@@ -191,6 +228,10 @@ div.table-list{
     max-height: 90vh; // Overrided by jQuery, works only in case of JS error.
     overflow: auto;
     color: @color-window-text;
+
+    .row > div.sepparated:not(:first-child){
+        border-left: 1px solid @color-window-border;
+    }
     
     hr{
         border-top-color: @color-window-border;
@@ -221,11 +262,11 @@ div.table-list{
     }
     
     .content{
-        padding: 15px;
+        padding: 10px;
         
         h3{
             color: @color-primary;
-            margin: 1em 0;
+            margin: .2em 0;
             padding: 0 0 .3em 0;
             border-bottom: 1px solid @color-window-border;
             font-size: 13px;
@@ -361,8 +402,20 @@ div.table-list{
     
     &.expedient{
         width: 1100px;
+        width: auto;
         display: none;
         
+        // Columns of same height to positioning the pdf button
+        // at the bottom of the sidebar
+                
+        > .content > .row{
+            display: flex;
+            
+            > div{
+                align-items: stretch;
+            }
+        }
+                
         div.alarms-number{
             .text{
                 display: inline-block;
@@ -395,6 +448,7 @@ div.table-list{
 
         ul.list-expedient-sumatory{
             padding-top: 1.5em;
+            padding-top: 0;
             li{
                 padding: .5em 0;
             }
@@ -403,6 +457,7 @@ div.table-list{
 
         ul.list-expedient-location{
             padding-top: 1.5em;
+            padding-top: 0;
             color: @color-primary;
             li{
                 padding: .5em 0;
@@ -412,12 +467,155 @@ div.table-list{
                 }
             }
         }
+        
+        div.donut-with-title{
+            text-align: right;
+            span{
+                font-weight: bold;
+                color: @color-primary;
+                float: left;
+                margin-top: 1.5em;
+                text-align: left;
+            }
+            .donut{
+                padding: .55em 0;
+            }
+        }
+        
+        div.key-value-list-with-title{
+            span.title{
+                font-weight: normal;
+                color: @color-primary;
+                float: left;
+                margin-top: 1.5em;
+                text-align: left;
+            }
+            ul{
+                margin: .9em 0;
+                width: 105px;
+                float: right;
+                
+                .custom-badge{
+                    margin-left: 5px;
+                }
+            }
+        }
+        
+        .sidebar{
+            position: relative;
+            .pdf-export{
+                position: absolute;
+                bottom: 0;
+                right: 15px;
+            }
+        }
+    }
+    
+    &.reports{
+        display: none;
+        
+        .ic{
+            position: absolute;
+            left: 6px;
+            top: 6px;
+        }
+
+        ul{
+            color: @color-primary;
+            font-weight: bold;
+            
+            li{
+                padding: .1em 0;
+
+                a{
+                    float: right;
+                    margin-left: .5em;
+                    img{
+                    }                    
+                }
+            }
+            
+            .number{
+                border: 1px solid @color-primary;
+                display: inline-block;
+                width: 1.5em;
+                text-align: center;
+                margin-right: .5em;
+            }
+        }
+    }
+    
+    &.infoviz{
+        display: none;
+        
+        .ic{
+            position: absolute;
+            left: 6px;
+            top: 6px;
+        }
+    }
+    
+    &.report1{
+        display: none;
+        
+        .ic{
+            position: absolute;
+            left: 6px;
+            top: 6px;
+        }
     }
 }
 
 .spacer-10{
     height: 10px;
 }
+
 .spacer-20{
     height: 20px;
+}
+
+/*for angular-js, hides content before is laoded*/
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+/*toolTip */
+#info {
+	position: absolute;
+	height: auto;
+	width: auto;
+	background-color: black;
+	border: 1px solid white;
+	color: white;
+	text-align: center;
+	z-index: 100;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#townInfoPanel{
+    .content{
+        .row{
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+}
+
+.expedient{
+    .content{
+        .row{
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+}
+
+.infoviz{
+    .datepicker{
+        font-size:10px;
+        line-height:1;
+    }
 }
