@@ -78,9 +78,9 @@ Controller.$inject = [
 			$scope.valueFontColor 		= '#6A90A6';
             $scope.min 					= 0;
             $scope.max 					= 100;
-            $scope.width 				= 60;
-            $scope.height 				= 60;
-            $scope.valueMinFontSize 	= 120;
+            $scope.width 				= 80;
+            $scope.height 				= 80;
+            $scope.valueMinFontSize 	= 80;
             $scope.titleMinFontSize 	= 48;
             $scope.labelMinFontSize 	= 9;
             $scope.minLabelMinFontSize 	= 9;
@@ -89,7 +89,7 @@ Controller.$inject = [
             $scope.hideMinMax 			= true;
             $scope.hideInnerShadow 		= false;
             $scope.relativeGaugeSize 	= false;
-            $scope.gaugeWidthScale 		= 0.8;
+            $scope.gaugeWidthScale 		= 1;
             $scope.gaugeColor 			= 'white';
             $scope.showInnerShadow 		= true;
             $scope.shadowOpacity 		= 0.5;
@@ -108,7 +108,7 @@ Controller.$inject = [
                     hi: 66
                 },
                 {
-                    color: "#00ff00",
+                    color: "#3d773d",
                     lo: 66,
                     hi: 100
                 }
@@ -177,8 +177,9 @@ Controller.$inject = [
 						$scope.valueMonth			= data.message.month;
 					}
 
-					$scope.valueDay = 0.8;
-					$scope.valueWeek = 80;
+					// test values
+					$scope.valueDay = 80;
+					$scope.valueWeek = 20;
 					
 					// bar chart fitxa "tendencia últimos 7 días"
 					$scope.labels_fitxa_rend = ['28-10-2016', '29-10-2016', '30-10-2016', '31-10-2016', '01-11-2016', '02-11-2016', '03-11-2016'];
@@ -186,7 +187,13 @@ Controller.$inject = [
 					$scope.data_fitxa_rend = [
 									[65, 59, 80, 81, 56, 55, 40]
 					];
-					$scope.options_fitxa_rend = {};
+					$scope.options_fitxa_rend = {
+				        scales: {
+				            xAxes: [{
+				                display: false
+				            }]
+				        }
+				    };
 					
 					// line chart fitxa "Volumenes"
 					$scope.labels_fitxa_vol = ["January", "February", "March", "April", "May", "June", "July"];
@@ -196,7 +203,13 @@ Controller.$inject = [
 						[28, 48, 40, 19, 86, 27, 90],
 						[8, 4, 0, 1, 6, 7, 9]
 					];
-					$scope.options_fitxa_vol = {};
+					$scope.options_fitxa_vol = {
+				        scales: {
+				            xAxes: [{
+				                display: false
+				            }]
+				        }
+				    };
  
  					// line chart fitxa detalle
  					$scope.labels_expedient = ["January", "February", "March", "April", "May", "June", "July"];
@@ -217,9 +230,36 @@ Controller.$inject = [
   					if(typeof data.message.sum_aportat!="undefined"){
   						$scope.sum_aportat			= data.message.sum_aportat;
   					}
+
+  					//volumenes
+  					if(typeof data.message.volumenes!="undefined"){
+  						//console.log(data.message.volumenes);
+  						
+  						$scope.series_vol = ['Aportado', 'Suministrado', 'Perdido'];
+  						$scope.labels_vol = [];
+  						$scope.data_vol = [];
+  						$scope.options_vol = {};
+
+  						var vol_aportat = [],
+  							vol_suministrat = [],
+  							vol_perdut = [];
+
+  						$.each(data.message.volumenes, function(i, item) {
+  							$scope.labels_vol.push(item.data);
+	  						//vol_aportat.push(item.sum_aportat);
+	  						vol_suministrat.push(item.sum_suministrat);
+	  						vol_perdut.push(item.sum_rebuig);
+						});
+
+						$scope.data_vol.push(vol_aportat);
+						$scope.data_vol.push(vol_suministrat);
+						$scope.data_vol.push(vol_perdut);
+  					}
+
 					//show window
 					$scope.townInfoPanel		= true;
 					$("#townInfoPanel").show();
+
 				}else{
 						
 				}

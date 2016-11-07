@@ -689,11 +689,29 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 		$rs 		= $this->_system->pdo_select("bd1",$queryCaudalMedio);
 		if(count($rs)>0){
 			$item['sum_aportat']	= number_format($rs[0]['sum_aportat']*100,0);
+		}		
+
+		/**************/
+
+		//Volumenes
+		$queryVol = "SELECT * FROM carto.service_diari";
+		$rs = $this->_system->pdo_select("bd1",$queryVol);
+		if(count($rs)>0){
+			foreach ($rs as $row) {
+				$record	= array(
+							"id"				=> $row['id'],
+							"service_code"		=> $row['service_code'],
+							"data"				=> $row['data'],
+							"sum_suministrat"	=> $row['sum_suministrat'],
+							"sum_aportat"		=> $row['sum_aportat'],
+							"sum_rebuig"		=> $row['sum_rebuig']
+				);
+				$item['volumenes'][] = $record;
+			}
 		}
-		
+
 		return array("status"=>"Accepted","message"=>$item,"code"=>200);
 //		return array("status"=>"Accepted","message"=>$item,"code"=>200,"week"=>$queryWeek,"day"=>$queryDay,"month"=>$queryMonth);
-		
 	}
 
 

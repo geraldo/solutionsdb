@@ -93,32 +93,34 @@
                             <input type="radio" name="datatype" value="data-real" checked="checked"> Datos reales (máx 8 días)<br>
                             <input type="radio" name="datatype" value="data-day"> Datos diarios
 
-                            <p class="infoviz-title">Municipio: 
-                                <select>
-                                  <option value=""></option>
-                                  <option value="Molins de Rei">Molins de Rei</option>
-                                  <option value="otro">otro</option>
-                                </select>
-                            </p>
+                            <p class="infoviz-title">Municipio:</p>
+                            <select>
+                              <option value="Molins de Rei">Molins de Rei</option>
+                            </select>
+                            
 
-                            <p class="infoviz-title">Sector:
-                                <select>
-                                  <option value=""></option>
-                                </select>
-                            </p>
+                            <p class="infoviz-title">Sector:</p>
+                            <select>
+                              <option value=""></option>
+                            </select>
+                            
 
-                            <p class="infoviz-title">Dato: 
-                                <select id="infoviz-data">
-                                  <option value=""></option>
-                                  <option value="sum_suministrat">Suministrado</option>
-                                  <option value="sum_aportat">Aportado</option>
-                                  <option value="sum_rebuig">Perdido</option>
-                                </select>
-                            </p>
+                            <p class="infoviz-title">Dato:</p>
+                            <select id="infoviz-data">
+                              <option value=""></option>
+                              <option value="sum_suministrat">Suministrado</option>
+                              <option value="sum_aportat">Aportado</option>
+                              <option value="sum_rebuig">Perdido</option>
+                            </select>
+                            
                         </div>
 
                         <div class="col-xs-9">
-                            <canvas id="infoviz-linechart" width="600" height="400"></canvas>
+                            <div id="infoviz-tag"></div>
+                            <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
+                            <canvas id="infoviz-linechart" width="600" height="300" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
+                            <canvas id="infoviz-linechart2" width="600" height="150" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
+
                         </div>
 
                     </div>
@@ -135,7 +137,7 @@
                    
                     <div class="row list-of-donuts">
                         <div class="col-xs-6" align="center">
-	                        <div justgage style="width:60px; height:60px"  titlePosition="below"
+	                        <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
 		                         									value="{{valueDay}}" value-font-color="{{valueFontColor}}"
 									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
 									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
@@ -157,7 +159,7 @@
                            	<p class="title">Alta</p>
                         </div>
                         <div class="col-xs-6" align="center">
-                            	<div justgage style="width:60px; height:60px"
+                            	<div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
 									value="{{valueWeek}}" value-font-color="{{valueFontColor}}"
 									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
 									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
@@ -178,31 +180,9 @@
 								</div>
                             <p class="title">Baja</p>
                         </div>
-                        <!--<div class="col-xs-4" align="center">
-                            	<div justgage style="width:60px; height:60px"
-									value="{{valueMonth}}" value-font-color="{{valueFontColor}}"
-									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
-									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
-									label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
-									maxLabelMinFontSize="{{maxLabelMinFontSize}}"
-									min="{{min}}" max="{{max}}"
-									hide-min-max="{{hideMinMax}}" hide-value="{{hideValue}}" hide-inner-shadow="{{hideInnerShadow}}"
-									gauge-width-scale="{{gaugeWidthScale}}" gauge-color="{{gaugeColor}}"
-									show-inner-shadow="{{showInnerShadow}}" shadow-opacity="{{shadowOpacity}}"
-									shadow-size="{{shadowSize}}" shadow-vertical-offset="{{shadowVerticalOffset}}"
-									level-colors="{{levelColors}}" custom-sectors="{{customSectors}}" no-gradient="{{noGradient}}"
-									start-animation-time="{{startAnimationTime}}" start-animation-type="{{startAnimationType}}"
-									refresh-animation-time="{{refreshAnimationTime}}" refresh-animation-type="{{refreshAnimationType}}"
-									donut="{{donut}}" donut-start-angle="{{donutStartAngle}}"
-									counter="{{counter}}" decimals="{{decimals}}" symbol="{{symbol}}" format-number="{{formatNumber}}"
-									human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
-									text-renderer="textRenderer">									
-								</div>
-                            <p class="title">Mes</p>
-                        </div>-->
                     </div>
                     <h3>Tendéncia del rendimiento</h3>
-					<canvas id="fitxa-barchart" class="chart chart-bar" chart-data="data_fitxa_rend" chart-labels="labels_fitxa_rend" chart-series="series_fitxa_rend" chart-options="options_fitxa_rend"></canvas>
+					<canvas id="fitxa-barchart" height="120" class="chart chart-bar" chart-data="data_fitxa_rend" chart-labels="labels_fitxa_rend" chart-series="series_fitxa_rend" chart-options="options_fitxa_rend"></canvas>
                     <h3>Información</h3>
                     <div class="list-with-icon">
                         <div class="icon-container">
@@ -219,7 +199,7 @@
                         </ul>
                     </div>
                     <h3>Volumenes</h3>
-                    <canvas id="fitxa-linechart" class="chart chart-line" chart-data="data_fitxa_vol" chart-labels="labels_fitxa_vol" chart-series="series_fitxa_vol" chart-options="options_fitxa_vol" chart-dataset override="datasetOverride"></canvas> 
+                    <canvas id="fitxa-linechart" height="120" class="chart chart-line" chart-data="data_fitxa_vol" chart-labels="labels_fitxa_vol" chart-series="series_fitxa_vol" chart-options="options_fitxa_vol" chart-dataset override="datasetOverride"></canvas> 
                     <hr />
                     <a href="#" class="btn btn-sm btn-primary open-expedient">Ficha</a> Ver ficha completa
                 </div>
@@ -373,7 +353,7 @@
                                             <span>Rendimiento</br />total</span>
                                         </div>
                                         <div class="col-xs-6">
-                                            <div justgage style="width:60px; height:60px"
+                                            <div justgage style="width:80px;height:70px;"
                                                 value="{{valueWeek}}" value-font-color="{{valueFontColor}}"
                                                 width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
                                                 value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
@@ -411,8 +391,9 @@
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#mensual" data-toggle="tab">Mensual</a></li>
-                                <li><a href="#anual" data-toggle="tab">Anual</a></li>
+                                <li class="active"><a href="#volumenes" data-toggle="tab">Volumenes</a></li>
+                                <li><a href="#ratios" data-toggle="tab">Ratios</a></li>
+                                <li><a href="#contadores" data-toggle="tab">Contadores</a></li>
                                 <li><a href="#xxx1" data-toggle="tab">Xxxxxxx</a></li>
                                 <li><a href="#xxx2" data-toggle="tab">Xxxxxxx</a></li>
                                 <li><a href="#xxx3" data-toggle="tab">Xxxxxxx</a></li>
@@ -422,6 +403,17 @@
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="mensual">
                                     <div class="row gutter-5">
+                                        <div class="col-xs-4" align="center">
+                                            <div class="table-list">
+                                                <h4>Volumen aportado</h4>
+                                                <ul class="list-unstyled">
+                                                    <?php for($i=0; $i<12; $i++): ?>
+                                                    <li><?php echo date('F Y', strtotime("+".$i." month", time())); ?> <span class="custom-badge pull-right"><?php echo rand(100, 50); ?></span></li>
+                                                    <?php endfor; ?>
+                                                    <li class="shoe">Total <span class="custom-badge pull-right"><?php echo rand(100, 50); ?></span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <div class="col-xs-4" align="center">
                                             <div class="table-list">
                                                 <h4>Volumen suministrado</h4>
@@ -435,18 +427,7 @@
                                         </div>
                                         <div class="col-xs-4" align="center">
                                             <div class="table-list">
-                                                <h4>Volumen registrado</h4>
-                                                <ul class="list-unstyled">
-                                                    <?php for($i=0; $i<12; $i++): ?>
-                                                    <li><?php echo date('F Y', strtotime("+".$i." month", time())); ?> <span class="custom-badge pull-right"><?php echo rand(100, 50); ?></span></li>
-                                                    <?php endfor; ?>
-                                                    <li class="shoe">Total <span class="custom-badge pull-right"><?php echo rand(100, 50); ?></span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4" align="center">
-                                            <div class="table-list">
-                                                <h4>Volumen pérdidas</h4>
+                                                <h4>Volumen perdido</h4>
                                                 <ul class="list-unstyled">
                                                     <?php for($i=0; $i<12; $i++): ?>
                                                     <li><?php echo date('F Y', strtotime("+".$i." month", time())); ?> <span class="custom-badge pull-right"><?php echo rand(100, 50); ?></span></li>
@@ -462,9 +443,9 @@
                                 <div role="tabpanel" class="tab-pane" id="xxx2">xxx2</div>
                                 <div role="tabpanel" class="tab-pane" id="xxx3">xxx3</div>
 
-                                <div class="spacer-20"></div>
+                                <!--<div class="spacer-20"></div>-->
                             
-                                <canvas id="expedient-linechart" class="chart chart-line" chart-data="data_expedient" chart-labels="labels_expedient" chart-series="series_expedient" chart-options="options_expedient" chart-dataset override="datasetOverride"></canvas> 
+                                <canvas id="expedient-linechart" height="70" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
 
                             </div>
                         </div>
@@ -762,9 +743,9 @@
                     //table.buttons().container().appendTo( $('#report1_wrapper', table.table().container() ) );
                 }
 
-                // load line chart
-                function loadLineChart(selectedData, data){
-                    var dataset = {
+                //load infoviz
+                function loadInfoviz(){
+                    /*var dataset = {
                             //label: "",
                             fill: false,
                             lineTension: 0.1,
@@ -785,43 +766,68 @@
                             pointHitRadius: 10,
                             data: [],
                             spanGaps: false,
-                    };
+                    };*/
 
-                    <?php  
-                        require_once 'libs/apps/vizdata/class.vizdata.php';
-                        $vizdata = new Vizdata();
+                    var scope = angular.element("#angularAppContainer").scope();
+                    //console.log(scope.vizdataList);
+                    var chartData = {};
+                    chartData.labels = [];
+                    var datasets = new Array($(".infoviz-tagval").length);
 
-                        $response = $vizdata->getDatosMunicipio();
+                    //get selected data
+                    $(".infoviz-tagval").each(function( index ) {
+                        //console.log($(this).data("value"));
+                        datasets[index] = {
+                            fill: false,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(75,192,192,0.4)",
+                            borderColor: "rgba(75,192,192,1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(75,192,192,1)",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                            pointHoverBorderColor: "rgba(220,220,220,1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [],
+                            spanGaps: false,
+                        };
+                        datasets[index].label = $(this).data("value"); 
+                    });
 
-                        if ($response['status'] == "Accepted") {
-                            $records = $response['message'];
-                            echo 'var thisDataset = dataset;'.PHP_EOL;
-                            echo 'thisDataset.label = selectedData;'.PHP_EOL;
-                            echo 'data.labels = [];'.PHP_EOL;
+                    for (i in scope.vizdataList) {
+                        var register = scope.vizdataList[i];
+                        console.log(register);
+                        chartData.labels.push(register['data']);
 
-                            foreach ($records as $record) {
-                                //print_r($record);
-                                echo 'data.labels.push("'.$record['data'].'");'.PHP_EOL;
-                                echo 'if (selectedData == "sum_suministrat") {'.PHP_EOL;
-                                    echo 'thisDataset.data.push('.$record['sum_suministrat'].');'.PHP_EOL;
-                                echo '} else if (selectedData == "sum_aportat") {'.PHP_EOL;
-                                    echo 'thisDataset.data.push('.$record['sum_aportat'].');'.PHP_EOL;
-                                echo '} else if (selectedData == "sum_rebuig") {'.PHP_EOL;
-                                    echo 'thisDataset.data.push('.$record['sum_rebuig'].');'.PHP_EOL;
-                                echo '};'.PHP_EOL;
-                            }
-                            echo 'data.datasets.push(dataset);'.PHP_EOL;
-                        }
-                    ?>
+                        $(".infoviz-tagval").each(function( index ) {
+                            datasets[index].data.push(register[$(this).data("value")]);
+                        });
+                    }
+
+                    chartData.datasets = datasets;
 
                     //Initialising chartjs linechart for infoviz
                     var ctx = $("#infoviz-linechart");
                     var myLineChart = new Chart(ctx, {
                         type: 'line',
-                        data: data,
+                        data: chartData,
                         options: {}
                     });
-                }                
+
+                    var ctx2 = $("#infoviz-linechart2");
+                    var myLineChart2 = new Chart(ctx2, {
+                        type: 'line',
+                        data: chartData,
+                        options: {}
+                    });
+                }
 
                 // Toggle the search window when the menu icon is pressed
                 
@@ -900,7 +906,24 @@
                 $(".window.infoviz").on("change", "#infoviz-data", function(e){
                     // get selected data value
                     var selectedData = $('#infoviz-data option:selected').val();
-                    loadLineChart(selectedData, chartData);
+
+                    if (selectedData !== "") {
+
+                        // draw line chart if not already done                    
+                        if (!$(".infoviz-tagval."+selectedData).length) {
+                            // add data tag
+                            $("#infoviz-tag").append("<span data-value='"+selectedData+"' class='infoviz-tagval "+selectedData+"'>"+selectedData+" <span class='closeButton'>x</span></span>");
+                            $(".closeButton").on("click", function(e){
+                                $(this).parent().remove();
+                                // redraw line chart
+                                loadInfoviz();
+                            });
+                            // draw line chart
+                            //loadLineChart(selectedData, chartData);
+                            loadInfoviz();
+                        }
+                    }
+
                     return false;
                 });
             });

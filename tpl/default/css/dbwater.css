@@ -86,6 +86,7 @@ div.list-of-donuts p.title {
   color: #6a90a4;
   margin-top: 0;
   margin-bottom: 0;
+  font-weight: bold;
 }
 div.table-list {
   background-color: white;
@@ -173,8 +174,8 @@ div.table-list ul li.shoe .custom-badge {
   margin-right: -10px;
 }
 .row.gutter-20 [class*="col-"] {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 3px;
+  padding-right: 5px;
 }
 #map {
   z-index: 0;
@@ -212,7 +213,7 @@ div.table-list ul li.shoe .custom-badge {
   color: white;
   background-color: #6a90a4;
   margin: 0;
-  padding: .5em;
+  padding: .3em;
   font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
@@ -228,12 +229,12 @@ div.table-list ul li.shoe .custom-badge {
   color: white;
 }
 .window .content {
-  padding: 10px;
+  padding: 15px;
 }
 .window .content h3 {
   color: #6a90a4;
-  margin: .2em 0;
-  padding: 0 0 .3em 0;
+  margin: .5em 0;
+  padding: 0 0 .2em 0;
   border-bottom: 1px solid #222;
   font-size: 13px;
   font-weight: bold;
@@ -384,7 +385,7 @@ div.table-list ul li.shoe .custom-badge {
   padding-top: 0;
 }
 .window.expedient ul.list-expedient-sumatory li {
-  padding: .5em 0;
+  padding: .5em 0 0;
 }
 .window.expedient ul.list-expedient-location {
   padding-top: 1.5em;
@@ -392,7 +393,7 @@ div.table-list ul li.shoe .custom-badge {
   color: #6a90a4;
 }
 .window.expedient ul.list-expedient-location li {
-  padding: .5em 0;
+  padding: .5em 0 0;
 }
 .window.expedient ul.list-expedient-location li strong {
   width: 80px;
@@ -419,7 +420,7 @@ div.table-list ul li.shoe .custom-badge {
   text-align: left;
 }
 .window.expedient div.key-value-list-with-title ul {
-  margin: .9em 0;
+  margin: .9em 0 0;
   width: 105px;
   float: right;
 }
@@ -506,15 +507,81 @@ div.table-list ul li.shoe .custom-badge {
   padding-top: 2px;
   padding-bottom: 2px;
 }
+#townInfoPanel .content {
+  padding: 0 10px;
+}
 #townInfoPanel .content .row {
   margin-left: 0;
   margin-right: 0;
+}
+.expedient .content {
+  padding: 0 10px;
 }
 .expedient .content .row {
   margin-left: 0;
   margin-right: 0;
 }
-.infoviz .datepicker {
+.expedient .content .row .col-xs-9 {
+  padding-left: 0;
+  padding-right: 0;
+}
+.expedient .content .row .table-list {
+  line-height: 1;
+}
+.window.infoviz .datepicker {
   font-size: 10px;
   line-height: 1;
+}
+.list-of-donuts tspan {
+  font-size: 14px;
+  font-weight: bold;
+}
+.donut-with-title tspan {
+  font-size: 14px;
+  font-weight: bold;
+}
+.window.infoviz {
+  width: 960px;
+}
+.window.infoviz .content .row .infoviz-title {
+  text-transform: uppercase;
+  color: white;
+  background-color: #6a90a4;
+  border-radius: 10px;
+  padding: 1px 10px;
+  margin: 3px 0 1px;
+}
+.window.infoviz .content .row input[type="radio"] {
+  margin-top: -1px;
+  vertical-align: middle;
+}
+.window.infoviz .content .row select {
+  height: 10px;
+}
+.window.infoviz .content .row .datepicker {
+  padding: 0;
+}
+.window.infoviz .content .row .datepicker td,
+.window.infoviz .content .row .datepicker th {
+  height: 18px;
+}
+.window.infoviz .content .row #infoviz-tag {
+  margin: 3px 0 10px;
+}
+.window.infoviz .content .row .infoviz-tagval {
+  border-radius: 10px;
+  margin: 5px;
+  padding: 2px 10px;
+}
+.window.infoviz .content .row .sum_aportat {
+  background-color: #ff0000;
+}
+.window.infoviz .content .row .sum_suministrat {
+  background-color: #00ff00;
+}
+.window.infoviz .content .row .sum_rebuig {
+  background-color: #0000ff;
+}
+.window.infoviz .content .row .closeButton {
+  cursor: pointer;
 }
