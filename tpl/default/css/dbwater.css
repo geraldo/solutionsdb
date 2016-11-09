@@ -560,9 +560,6 @@ div.table-list ul li.shoe .custom-badge {
   margin-top: -1px;
   vertical-align: middle;
 }
-.window.infoviz .content .row select {
-  height: 10px;
-}
 .window.infoviz .content .row .datepicker {
   padding: 0;
 }

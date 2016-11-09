@@ -93,7 +93,7 @@
                             <input type="radio" name="datatype" value="data-real"> Datos reales (máx 8 días)<br>
                             <input type="radio" name="datatype" value="data-day" checked="checked"> Datos diarios
 
-                            <p class="infoviz-title">Municipio:</p>
+                            <p class="infoviz-title">Servicio:</p>
                             <select id="infoviz-municipi">
                               <option value="Molins de Rei" data-codi="08MDR" checked="checked">Molins de Rei</option>
                             </select>
@@ -118,8 +118,8 @@
                         <div class="col-xs-9">
                             <div id="infoviz-tag"></div>
                             <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
-                            <canvas id="infoviz-linechart1" width="600" height="300" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
-                            <canvas id="infoviz-linechart2" width="600" height="150" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
+                            <canvas id="infoviz-linechart1" width="600" height="300" class="chart chart-line"></canvas> 
+                            <canvas id="infoviz-linechart2" width="600" height="140" class="chart chart-line"></canvas> 
 
                         </div>
 
@@ -1031,7 +1031,7 @@
 
                  // Load line chart
                 $("#infoviz-data").on("change", function(e){
-                    
+
                     // get selected data value
                     var selectedData = $('#infoviz-data option:selected').val(),
                         selectedDataLabel = $('#infoviz-data option:selected').text(),
