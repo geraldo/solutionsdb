@@ -613,6 +613,10 @@
                     calendarWeeks: true,
                     todayHighlight: true
                 });
+                $('#infoviz-datepicker1').datepicker().on("changeDate", function(e) {
+                    loadInfoviz();
+                });
+
                 $('#infoviz-datepicker2').datepicker({
                     format: "dd/mm/yyyy",
                     startDate: "01/01/2015",
@@ -622,6 +626,9 @@
                     daysOfWeekHighlighted: "0",
                     calendarWeeks: true,
                     todayHighlight: true
+                });
+                $('#infoviz-datepicker2').datepicker().on("changeDate", function(e) {
+                    loadInfoviz();
                 });
                 
                 // Adjust the search window position.
@@ -828,6 +835,8 @@
                                 borderDash: [],
                                 borderDashOffset: 0.0,
                                 borderJoinStyle: 'miter',
+                                pointBorderColor: "rgba(75,192,192,1)",
+                                pointBackgroundColor: "#fff",
                                 pointBorderWidth: 1,
                                 pointHoverRadius: 5,
                                 pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1000,8 +1009,7 @@
                // Close the current window when press the times icon on the top right corner.
                 
                 $(".window").on("click", "h2 .fa-times", function(){
-                    console.log($(this).parent().parent().parent());
-                    if ($(this).parent().parent().parent().hasClass("right-side")) $(".window.expedient").toggle();
+                    if ($(this).parent().parent().parent().hasClass("right-side")) $(".window.expedient").hide();
                     $(this).closest(".window").toggle();
                 });
                 
@@ -1023,6 +1031,7 @@
 
                  // Load line chart
                 $("#infoviz-data").on("change", function(e){
+                    
                     // get selected data value
                     var selectedData = $('#infoviz-data option:selected').val(),
                         selectedDataLabel = $('#infoviz-data option:selected').text(),
