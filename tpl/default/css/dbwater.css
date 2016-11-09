@@ -106,7 +106,7 @@ div.table-list ul {
   padding: 1em 1.5em;
 }
 div.table-list ul li.shoe {
-  font-size: 1.1em;
+  font-size: .8em;
   font-weight: bold;
 }
 div.table-list ul li.shoe .custom-badge {
@@ -233,7 +233,7 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window .content h3 {
   color: #6a90a4;
-  margin: .5em 0;
+  margin: .8em 0;
   padding: 0 0 .2em 0;
   border-bottom: 1px solid #222;
   font-size: 13px;
@@ -406,21 +406,24 @@ div.table-list ul li.shoe .custom-badge {
   font-weight: bold;
   color: #6a90a4;
   float: left;
-  margin-top: 1.5em;
+  margin-top: .8em;
   text-align: left;
 }
 .window.expedient div.donut-with-title .donut {
   padding: .55em 0;
 }
+.window.expedient div.donut-with-title .ng-isolate-scope {
+  margin-top: -12px;
+}
 .window.expedient div.key-value-list-with-title span.title {
   font-weight: normal;
   color: #6a90a4;
   float: left;
-  margin-top: 1.5em;
+  margin-top: .8em;
   text-align: left;
 }
 .window.expedient div.key-value-list-with-title ul {
-  margin: .9em 0 0;
+  margin: .3em 0 0;
   width: 105px;
   float: right;
 }
@@ -528,9 +531,8 @@ div.table-list ul li.shoe .custom-badge {
 .expedient .content .row .table-list {
   line-height: 1;
 }
-.window.infoviz .datepicker {
-  font-size: 10px;
-  line-height: 1;
+.expedient .content .row ul {
+  margin-bottom: 5px;
 }
 .list-of-donuts tspan {
   font-size: 14px;
@@ -543,13 +545,16 @@ div.table-list ul li.shoe .custom-badge {
 .window.infoviz {
   width: 960px;
 }
+.window.infoviz .content {
+  padding-top: 5px;
+}
 .window.infoviz .content .row .infoviz-title {
   text-transform: uppercase;
   color: white;
   background-color: #6a90a4;
   border-radius: 10px;
   padding: 1px 10px;
-  margin: 3px 0 1px;
+  margin: 10px 0 5px;
 }
 .window.infoviz .content .row input[type="radio"] {
   margin-top: -1px;
@@ -563,12 +568,16 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window.infoviz .content .row .datepicker td,
 .window.infoviz .content .row .datepicker th {
-  height: 18px;
+  height: 15px;
+}
+.window.infoviz .content .row #infoviz-datepicker2 {
+  margin-bottom: 10px;
 }
 .window.infoviz .content .row #infoviz-tag {
   margin: 3px 0 10px;
 }
 .window.infoviz .content .row .infoviz-tagval {
+  color: white;
   border-radius: 10px;
   margin: 5px;
   padding: 2px 10px;
@@ -584,4 +593,16 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window.infoviz .content .row .closeButton {
   cursor: pointer;
+}
+.window.infoviz .datepicker {
+  font-size: 10px;
+  line-height: .8;
+}
+.table-condensed > tbody > tr > td,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > td,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > thead > tr > th {
+  padding: 3px;
 }

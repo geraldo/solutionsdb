@@ -238,7 +238,13 @@ Controller.$inject = [
   						$scope.series_vol = ['Aportado', 'Suministrado', 'Perdido'];
   						$scope.labels_vol = [];
   						$scope.data_vol = [];
-  						$scope.options_vol = {};
+  						$scope.options_vol = {
+					        scales: {
+					            xAxes: [{
+					                display: false
+					            }]
+					        }
+					    };
 
   						var vol_aportat = [],
   							vol_suministrat = [],

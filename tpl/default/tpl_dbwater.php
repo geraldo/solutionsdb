@@ -78,7 +78,7 @@
             <div class="window infoviz">
                 <h2>
                     <img src="tpl/default/img/dbwater/ic-file.png" class="ic" />
-                    Visualziación grandes consumidores
+                    Gráficas
                     <a href="#" class="pull-right" ng-click="toggleInfoviz(0)"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
@@ -90,17 +90,17 @@
                             <p class="infoviz-title">Fecha final:</p>
                             <div id="infoviz-datepicker2"></div>
                             
-                            <input type="radio" name="datatype" value="data-real" checked="checked"> Datos reales (máx 8 días)<br>
-                            <input type="radio" name="datatype" value="data-day"> Datos diarios
+                            <input type="radio" name="datatype" value="data-real"> Datos reales (máx 8 días)<br>
+                            <input type="radio" name="datatype" value="data-day" checked="checked"> Datos diarios
 
                             <p class="infoviz-title">Municipio:</p>
-                            <select>
-                              <option value="Molins de Rei">Molins de Rei</option>
+                            <select id="infoviz-municipi">
+                              <option value="Molins de Rei" data-codi="08MDR" checked="checked">Molins de Rei</option>
                             </select>
                             
 
                             <p class="infoviz-title">Sector:</p>
-                            <select>
+                            <select id="infoviz-sector">
                               <option value=""></option>
                             </select>
                             
@@ -118,7 +118,7 @@
                         <div class="col-xs-9">
                             <div id="infoviz-tag"></div>
                             <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
-                            <canvas id="infoviz-linechart" width="600" height="300" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
+                            <canvas id="infoviz-linechart1" width="600" height="300" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
                             <canvas id="infoviz-linechart2" width="600" height="150" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
 
                         </div>
@@ -138,7 +138,7 @@
                     <div class="row list-of-donuts">
                         <div class="col-xs-6" align="center">
 	                        <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
-		                         									value="{{valueDay}}" value-font-color="{{valueFontColor}}"
+		                         	value="{{valueDay}}" value-font-color="{{valueFontColor}}"
 									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
 									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
 									label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
@@ -328,12 +328,13 @@
             
             <div class="window expedient">
                 <h2>
-                    Ficha de sector 43
+                    Ficha del municipio: {{townName}}
                     <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
                 </h2>
                 <div class="content">
                     <div class="row">
                         <div class="col-xs-9">
+                            <div class="spacer-10"></div>
                             <div class="row gutter-20">
                                 <div class="col-xs-3 sepparated">
                                     <ul class="list-unstyled list-expedient-location">
@@ -445,11 +446,12 @@
 
                                 <!--<div class="spacer-20"></div>-->
                             
-                                <canvas id="expedient-linechart" height="70" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
+                                <canvas id="expedient-linechart" height="80" class="chart chart-line" chart-data="data_vol" chart-labels="labels_vol" chart-series="series_vol" chart-options="options_vol" chart-dataset override="datasetOverride"></canvas> 
 
                             </div>
                         </div>
                         <div class="col-xs-3 sidebar">
+                            <div class="spacer-10"></div>
                             <img src="tpl/default/img/dbwater/fake-img-expedient-3.png" class="full-width" />
                             <hr />
                             <div class="alarms-number">
@@ -500,11 +502,69 @@
                     $(this).tab('show')
                 });
 
-                //initial data for line chart
-                var chartData = {
-                        //labels: [],
-                        datasets: []
-                };
+                //highlight infoviz line chart
+                // The original draw function for the line chart. This will be applied after we have drawn our highlight range (as a rectangle behind the line chart).
+                var originalLineDraw = Chart.controllers.line.prototype.draw;
+                // Extend the line chart, in order to override the draw function.
+                Chart.helpers.extend(Chart.controllers.line.prototype, {
+                  draw : function() {
+                    var chart = this.chart;
+                    // Get the object that determines the region to highlight.
+                    var xHighlightRange = chart.config.data.xHighlightRange;
+                    var yHighlightRange = chart.config.data.yHighlightRange;
+
+                    // If the object exists.
+                    if (xHighlightRange !== undefined) {
+                      var ctx = chart.chart.ctx;
+
+                      var xRangeBegin = xHighlightRange.begin;
+                      var xRangeEnd = xHighlightRange.end;
+
+                      var xaxis = chart.scales['x-axis-0'];
+                      var yaxis = chart.scales['y-axis-0'];
+
+                      var xRangeBeginPixel = xaxis.getPixelForValue(xRangeBegin);
+                      var xRangeEndPixel = xaxis.getPixelForValue(xRangeEnd);
+
+                      ctx.save();
+
+                      // The fill style of the rectangle we are about to fill.
+                      ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+                      // Fill the rectangle that represents the highlight region. The parameters are the closest-to-starting-point pixel's x-coordinate,
+                      // the closest-to-starting-point pixel's y-coordinate, the width of the rectangle in pixels, and the height of the rectangle in pixels, respectively.
+                      ctx.fillRect(Math.min(xRangeBeginPixel, xRangeEndPixel), yaxis.top, Math.max(xRangeBeginPixel, xRangeEndPixel) - Math.min(xRangeBeginPixel, xRangeEndPixel), yaxis.bottom-yaxis.top);
+
+                      ctx.restore();
+                    }
+
+                    // If the object exists.
+                    if (yHighlightRange !== undefined) {
+                      var ctx = chart.chart.ctx;
+
+                      var yRangeBegin = yHighlightRange.begin;
+                      var yRangeEnd = yHighlightRange.end;
+
+                      var xaxis = chart.scales['x-axis-0'];
+                      var yaxis = chart.scales['y-axis-0'];
+
+                      var yRangeBeginPixel = yaxis.getPixelForValue(yRangeBegin);
+                      var yRangeEndPixel = yaxis.getPixelForValue(yRangeEnd);
+
+                      ctx.save();
+
+                      // The fill style of the rectangle we are about to fill.
+                      ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+                      // Fill the rectangle that represents the highlight region. The parameters are the closest-to-starting-point pixel's x-coordinate,
+                      // the closest-to-starting-point pixel's y-coordinate, the width of the rectangle in pixels, and the height of the rectangle in pixels, respectively.
+                      ctx.fillRect(xaxis.left, Math.min(yRangeBeginPixel, yRangeEndPixel), xaxis.right - xaxis.left, Math.max(yRangeBeginPixel, yRangeEndPixel) - Math.min(yRangeBeginPixel, yRangeEndPixel));
+
+                      ctx.restore();
+                    }
+
+                    // Apply the original draw function for the line chart.
+                    originalLineDraw.apply(this, arguments);
+                  }
+                });
 
                 
                 // Adjust the right window.
@@ -545,9 +605,10 @@
                 $('#infoviz-datepicker1').datepicker({
                     format: "dd/mm/yyyy",
                     startDate: "01/01/2015",
-                    endDate: "31/12/2016",  //today???
+                    endDate: "0d",
                     language: "es",
                     multidate: false,
+                    //defaultViewDate: {year:0, month:9, day:0},
                     daysOfWeekHighlighted: "0",
                     calendarWeeks: true,
                     todayHighlight: true
@@ -555,7 +616,7 @@
                 $('#infoviz-datepicker2').datepicker({
                     format: "dd/mm/yyyy",
                     startDate: "01/01/2015",
-                    endDate: "31/12/2016",  //today???
+                    endDate: "0d",
                     language: "es",
                     multidate: false,
                     daysOfWeekHighlighted: "0",
@@ -745,88 +806,133 @@
 
                 //load infoviz
                 function loadInfoviz(){
-                    /*var dataset = {
-                            //label: "",
-                            fill: false,
-                            lineTension: 0.1,
-                            backgroundColor: "rgba(75,192,192,0.4)",
-                            borderColor: "rgba(75,192,192,1)",
-                            borderCapStyle: 'butt',
-                            borderDash: [],
-                            borderDashOffset: 0.0,
-                            borderJoinStyle: 'miter',
-                            pointBorderColor: "rgba(75,192,192,1)",
-                            pointBackgroundColor: "#fff",
-                            pointBorderWidth: 1,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                            pointHoverBorderColor: "rgba(220,220,220,1)",
-                            pointHoverBorderWidth: 2,
-                            pointRadius: 1,
-                            pointHitRadius: 10,
-                            data: [],
-                            spanGaps: false,
-                    };*/
-
                     var scope = angular.element("#angularAppContainer").scope();
-                    //console.log(scope.vizdataList);
-                    var chartData = {};
-                    chartData.labels = [];
-                    var datasets = new Array($(".infoviz-tagval").length);
 
-                    //get selected data
-                    $(".infoviz-tagval").each(function( index ) {
-                        //console.log($(this).data("value"));
-                        datasets[index] = {
-                            fill: false,
-                            lineTension: 0.1,
-                            backgroundColor: "rgba(75,192,192,0.4)",
-                            borderColor: "rgba(75,192,192,1)",
-                            borderCapStyle: 'butt',
-                            borderDash: [],
-                            borderDashOffset: 0.0,
-                            borderJoinStyle: 'miter',
-                            pointBorderColor: "rgba(75,192,192,1)",
-                            pointBackgroundColor: "#fff",
-                            pointBorderWidth: 1,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                            pointHoverBorderColor: "rgba(220,220,220,1)",
-                            pointHoverBorderWidth: 2,
-                            pointRadius: 1,
-                            pointHitRadius: 10,
-                            data: [],
-                            spanGaps: false,
-                        };
-                        datasets[index].label = $(this).data("value"); 
-                    });
+                    var chartData1 = {};
+                    var chartData2 = {};
+                    chartData1.labels = [];
+                    chartData2.labels = [];
+                    var datasets1 = new Array($(".infoviz-tagval").length);
+                    var datasets2 = new Array($(".infoviz-tagval").length);
 
-                    for (i in scope.vizdataList) {
-                        var register = scope.vizdataList[i];
-                        console.log(register);
-                        chartData.labels.push(register['data']);
+                    if (datasets1.length > 0) {
 
+                        //get selected data
                         $(".infoviz-tagval").each(function( index ) {
-                            datasets[index].data.push(register[$(this).data("value")]);
+
+                            datasets1[index] = {
+                                fill: false,
+                                lineTension: 0.1,
+                                backgroundColor: "rgba(75,192,192,0.4)",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                                pointHoverBorderColor: "rgba(220,220,220,1)",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                data: [],
+                                spanGaps: false,
+                            };
+                            datasets1[index].label = $(this).data("value"); 
+
+                            datasets2[index] = {
+                                fill: false,
+                                lineTension: 0.1,
+                                backgroundColor: "rgba(75,192,192,0.4)",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "rgba(75,192,192,1)",
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                                pointHoverBorderColor: "rgba(220,220,220,1)",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                data: [],
+                                spanGaps: false,
+                            };
+                            datasets2[index].label = $(this).data("value"); 
+
+                            //line color
+                            if ($(this).hasClass("sum_aportat")) {
+                                datasets1[index].borderColor = "#ff0000";
+                                datasets2[index].borderColor = "#ff0000";
+                            } 
+                            else if ($(this).hasClass("sum_suministrat")) {
+                                datasets1[index].borderColor = "#00ff00";
+                                datasets2[index].borderColor = "#00ff00";
+                            }
+                            else if ($(this).hasClass("sum_rebuig")) {
+                                datasets1[index].borderColor = "#0000ff";
+                                datasets2[index].borderColor = "#0000ff";
+                            }
+                        });
+
+                        // get data from datepicker
+                        var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
+                            fechaEnd = $('#infoviz-datepicker2').datepicker("getDate");
+
+                        //fill datasets
+                        for (i in scope.vizdataList) {
+                            var register = scope.vizdataList[i];
+                            var fecha = new Date(register["data"]);
+
+                            //fill dataset for line chart with date zoom
+                            if (fecha >= fechaBegin && fecha <= fechaEnd) {
+                                chartData1.labels.push(register['data']);
+
+                                $(".infoviz-tagval").each(function( index ) {
+                                    datasets1[index].data.push(register[$(this).data("value")]);
+                                });
+                            }
+
+                            //fill dataset for line chart with all dates
+                            chartData2.labels.push(register['data']);
+
+                            $(".infoviz-tagval").each(function( index ) {
+                                datasets2[index].data.push(register[$(this).data("value")]);
+                            });
+                        }
+                        chartData1.datasets = datasets1;
+                        chartData2.datasets = datasets2;
+
+                        // get zoom highlight
+                        var fechaRegisterBegin = new Date(scope.vizdataList[0]['data']),
+                            fechaRegisterEnd = new Date(scope.vizdataList[scope.vizdataList.length-1]['data']);
+
+                        if (fechaBegin < fechaRegisterBegin) fechaBegin = fechaRegisterBegin;
+                        if (fechaEnd > fechaRegisterEnd) fechaEnd = fechaRegisterEnd;
+
+                        //set zoom highlight
+                        chartData2.xHighlightRange = {
+                          begin: fechaBegin.yyyymmdd(),
+                          end: fechaEnd.yyyymmdd()
+                        }
+
+                        //Initialising chartjs linechart for infoviz
+                        var ctx1 = $("#infoviz-linechart1");
+                        var myLineChart1 = new Chart(ctx1, {
+                            type: 'line',
+                            data: chartData1,
+                            options: {}
+                        });
+
+                        var ctx2 = $("#infoviz-linechart2");
+                        var myLineChart2 = new Chart(ctx2, {
+                            type: 'line',
+                            data: chartData2,
+                            options: {}
                         });
                     }
-
-                    chartData.datasets = datasets;
-
-                    //Initialising chartjs linechart for infoviz
-                    var ctx = $("#infoviz-linechart");
-                    var myLineChart = new Chart(ctx, {
-                        type: 'line',
-                        data: chartData,
-                        options: {}
-                    });
-
-                    var ctx2 = $("#infoviz-linechart2");
-                    var myLineChart2 = new Chart(ctx2, {
-                        type: 'line',
-                        data: chartData,
-                        options: {}
-                    });
                 }
 
                 // Toggle the search window when the menu icon is pressed
@@ -877,12 +983,25 @@
                 $("#menu").on("click", ".infoviz", function(){
                     $(".window.infoviz").toggle();
                     setInfovizWindowPosition();
+
+                    //set start and end date for datepicker                
+                    var onemonthago = new Date();
+                    onemonthago.setMonth(onemonthago.getMonth() - 1);
+                    var onedayago = new Date();
+                    onedayago.setDate(onedayago.getDate() - 1);
+                    $('#infoviz-datepicker1').datepicker('setDate', onemonthago);
+                    $('#infoviz-datepicker1').datepicker('update', onemonthago);
+                    $('#infoviz-datepicker2').datepicker('setDate', onedayago);
+                    $('#infoviz-datepicker2').datepicker('update', onedayago);
+
                     return false;
                 });
 
                // Close the current window when press the times icon on the top right corner.
                 
                 $(".window").on("click", "h2 .fa-times", function(){
+                    console.log($(this).parent().parent().parent());
+                    if ($(this).parent().parent().parent().hasClass("right-side")) $(".window.expedient").toggle();
                     $(this).closest(".window").toggle();
                 });
                 
@@ -903,23 +1022,24 @@
                 });
 
                  // Load line chart
-                $(".window.infoviz").on("change", "#infoviz-data", function(e){
+                $("#infoviz-data").on("change", function(e){
                     // get selected data value
-                    var selectedData = $('#infoviz-data option:selected').val();
+                    var selectedData = $('#infoviz-data option:selected').val(),
+                        selectedDataLabel = $('#infoviz-data option:selected').text(),
+                        selectedDataCodi = $('#infoviz-municipi option:selected').data("codi");
 
                     if (selectedData !== "") {
 
                         // draw line chart if not already done                    
                         if (!$(".infoviz-tagval."+selectedData).length) {
                             // add data tag
-                            $("#infoviz-tag").append("<span data-value='"+selectedData+"' class='infoviz-tagval "+selectedData+"'>"+selectedData+" <span class='closeButton'>x</span></span>");
+                            $("#infoviz-tag").append("<span data-value='"+selectedData+"' class='infoviz-tagval "+selectedData+"'>"+selectedDataCodi+" "+selectedDataLabel+" <span class='closeButton'>x</span></span>");
                             $(".closeButton").on("click", function(e){
                                 $(this).parent().remove();
                                 // redraw line chart
                                 loadInfoviz();
                             });
                             // draw line chart
-                            //loadLineChart(selectedData, chartData);
                             loadInfoviz();
                         }
                     }
@@ -927,6 +1047,14 @@
                     return false;
                 });
             });
+
+            Date.prototype.yyyymmdd = function() {
+              var mm = this.getMonth() + 1; // getMonth() is zero-based
+              var dd = this.getDate();
+
+              return [this.getFullYear(), mm<10 ? '0'+ mm: mm, dd<10 ? '0'+ dd : dd].join('-')
+            };
+
         </script>
         
     	<!-- Angular js -->
@@ -947,7 +1075,7 @@
 	    <script src="js/libs/raphael-2.1.4.min.js"></script> 
 		<script src="js/libs/justgage.js"></script> 
 		<script src="js/libs/angular-gage.min.js"></script> 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 		<script src="js/libs/angular-chart.min.js"></script>
         <script src="js/libs/angular-datatables.min.js"></script>
 		<!-- end charts -->

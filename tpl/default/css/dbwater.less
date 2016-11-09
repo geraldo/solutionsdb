@@ -118,7 +118,7 @@ div.table-list{
         padding: 1em 1.5em;
         
         li.shoe{
-            font-size: 1.1em;
+            font-size: .8em;
             font-weight: bold;
             
             .custom-badge{
@@ -267,7 +267,7 @@ div.table-list{
         
         h3{
             color: @color-primary;
-            margin: .5em 0;
+            margin: .8em 0;
             padding: 0 0 .2em 0;
             border-bottom: 1px solid @color-window-border;
             font-size: 13px;
@@ -475,11 +475,14 @@ div.table-list{
                 font-weight: bold;
                 color: @color-primary;
                 float: left;
-                margin-top: 1.5em;
+                margin-top: .8em;
                 text-align: left;
             }
             .donut{
                 padding: .55em 0;
+            }
+            .ng-isolate-scope{
+                margin-top: -12px;
             }
         }
         
@@ -488,11 +491,11 @@ div.table-list{
                 font-weight: normal;
                 color: @color-primary;
                 float: left;
-                margin-top: 1.5em;
+                margin-top: .8em;
                 text-align: left;
             }
             ul{
-                margin: .9em 0 0;
+                margin: .3em 0 0;
                 width: 105px;
                 float: right;
                 
@@ -623,14 +626,11 @@ div.table-list{
             .table-list{
                 line-height:1;
             }
-        }
-    }
-}
 
-.window.infoviz{
-    .datepicker{
-        font-size:10px;
-        line-height:1;
+            ul{
+                margin-bottom: 5px;
+            }
+        }
     }
 }
 
@@ -652,6 +652,8 @@ div.table-list{
     width:960px;
 
     .content{
+        padding-top: 5px;
+
         .row{
             .infoviz-title{
                 text-transform:uppercase;
@@ -659,7 +661,7 @@ div.table-list{
                 background-color: @color-primary;
                 border-radius:10px;
                 padding: 1px 10px;
-                margin: 3px 0 1px;
+                margin: 10px 0 5px;
             }
             input[type="radio"]{
                 margin-top:-1px;
@@ -672,13 +674,17 @@ div.table-list{
                 padding:0;
 
                 td,th{
-                    height:18px;
+                    height:15px;
                 }
+            }
+            #infoviz-datepicker2{
+                margin-bottom:10px;
             }
             #infoviz-tag{
                 margin: 3px 0 10px;
             }
             .infoviz-tagval{
+                color:white;
                 border-radius:10px;
                 margin:5px;
                 padding: 2px 10px;
@@ -697,4 +703,14 @@ div.table-list{
             }
         }
     }
+
+    .datepicker{
+        font-size:10px;
+        line-height:.8;
+    }
+}
+
+
+.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+    padding: 3px;
 }
