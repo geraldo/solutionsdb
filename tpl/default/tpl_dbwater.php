@@ -906,6 +906,7 @@
 
                             //fill dataset for line chart with all dates
                             chartData2.labels.push(register['data']);
+                            //chartData2.labels.push(new Date(register['data']));
 
                             $(".infoviz-tagval").each(function( index ) {
                                 datasets2[index].data.push(register[$(this).data("value")]);
@@ -932,14 +933,44 @@
                         var myLineChart1 = new Chart(ctx1, {
                             type: 'line',
                             data: chartData1,
-                            options: {}
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        type: "time",
+                                        time: {
+                                            unit: "day",
+                                            unitStepSize: "7",
+                                            //min: new Date("2016-06-01"),
+                                            //max: new Date("2016-07-27"),
+                                            displayFormats: {
+                                                day: "DD-MM"
+                                            }
+                                        }
+                                    }]
+                                }
+                            }
                         });
 
                         var ctx2 = $("#infoviz-linechart2");
                         var myLineChart2 = new Chart(ctx2, {
                             type: 'line',
                             data: chartData2,
-                            options: {}
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        type: "time",
+                                        time: {
+                                            unit: "week",
+                                            unitStepSize: "2",
+                                            //min: new Date("2016-06-01"),
+                                            //max: new Date("2016-07-27"),
+                                            displayFormats: {
+                                                week: "MM-YY (W)"
+                                            }
+                                        }
+                                    }]
+                                }
+                            }
                         });
                     }
                 }
@@ -1084,7 +1115,8 @@
 	    <script src="js/libs/raphael-2.1.4.min.js"></script> 
 		<script src="js/libs/justgage.js"></script> 
 		<script src="js/libs/angular-gage.min.js"></script> 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
 		<script src="js/libs/angular-chart.min.js"></script>
         <script src="js/libs/angular-datatables.min.js"></script>
 		<!-- end charts -->
