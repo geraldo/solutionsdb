@@ -624,7 +624,7 @@ FROM carto.municipios as a LEFT JOIN carto.concesion as b ON a.cmun5_ine=b.cmun5
 	//**********************************************************************************************************
 	//**********************************************************************************************************
 	
-	function dbWaterTownInfo($cmuni5_dgc,$town_name,$initialDate,$finalDate){
+	function dbWaterTownInfo($cmuni5_dgc,$town_name,$service_code,$initialDate,$finalDate){
 		$query = "SELECT AVG(service_diari.rt_alta)
 FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_service = carto.service_diari.service_code ";
 		
@@ -693,7 +693,37 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 
 		/**************/
 
-		//Volumenes
+		//performace
+		$queryPerformance = "SELECT * FROM web_results.service_performance_days('".$service_code."') LIMIT 1";
+		$rs = $this->_system->pdo_select("bd1",$queryPerformance);
+		if(count($rs)>0){
+
+			$row = $rs[0];
+			$record	= array(
+						"high"		=> $row['high_performance'],
+						"low"		=> $row['theoric_low_performance'],
+						"global"	=> $row['theoric_global_performance']
+			);
+			$item['performance'] = $record;
+		}
+
+		//info
+		$queryInfo = "SELECT * FROM web_results.service_info_days('".$service_code."') LIMIT 1";
+		$rs = $this->_system->pdo_select("bd1",$queryInfo);
+		if(count($rs)>0){
+			$row = $rs[0];
+			$record	= array(
+						"supplied"		=> $row['supplied'],
+						"distributed"	=> $row['distributed'],
+						"loses"			=> $row['loses'],
+						"avg_flow"		=> $row['avg_flow'],
+						"night_flow"	=> $row['night_flow'],
+						"volume_price"	=> $row['volume_price']
+			);
+			$item['info'] = $record;
+		}
+
+		//volume
 		$queryVol = "SELECT * FROM carto.service_diari";
 		$rs = $this->_system->pdo_select("bd1",$queryVol);
 		if(count($rs)>0){

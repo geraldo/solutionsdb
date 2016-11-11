@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<title>DBWater</title>
-		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $baseHref?>/apple-touch-icon.png">
-		<link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-32x32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-16x16.png" sizes="16x16">
-		<link rel="manifest" href="<?php echo $baseHref?>/manifest.json">
-		<link rel="mask-icon" href="<?php echo $baseHref?>/safari-pinned-tab.svg" color="#5bbad5">
-		<meta name="theme-color" content="#ffffff">
+        <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $baseHref?>/apple-touch-icon.png">
+        <link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="<?php echo $baseHref?>/manifest.json">
+        <link rel="mask-icon" href="<?php echo $baseHref?>/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="theme-color" content="#ffffff">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
@@ -144,7 +144,7 @@
                     <div class="row list-of-donuts">
                         <div class="col-xs-6" align="center">
 	                        <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
-		                         	value="{{valueDay}}" value-font-color="{{valueFontColor}}"
+		                         	value="{{valueHigh}}" value-font-color="{{valueFontColor}}"
 									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
 									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
 									label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
@@ -166,7 +166,7 @@
                         </div>
                         <div class="col-xs-6" align="center">
                             	<div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
-									value="{{valueWeek}}" value-font-color="{{valueFontColor}}"
+									value="{{valueLow}}" value-font-color="{{valueFontColor}}"
 									width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
 									value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
 									label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
@@ -196,12 +196,12 @@
                             <img src="tpl/default/img/dbwater/ic-water.jpg" class="icon" />
                         </div>
                         <ul class="list-unstyled list-left-bordered">
-                            <li>Volumen aportado <span class="pull-right custom-badge">{{sum_aportat}}</span></li>
-                            <li>Volumen suministrado <span class="pull-right custom-badge">{{sum_suministrat}}</span></li>
-                            <li>Volumen de pérdida <span class="pull-right custom-badge">{{sum_rebuig}}</span></li>
-                            <li>Caudal medio <span class="pull-right custom-badge">FALTA</span></li>
-                            <li>Caudal mínimo nocturno <span class="pull-right custom-badge">FALTA</span></li>
-                            <li>Caudal por m3 <span class="pull-right custom-badge">FALTA</span></li>
+                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
+                            <li>Volumen suministrado <span class="pull-right custom-badge">{{valueSupplied}}</span></li>
+                            <li>Volumen de pérdida <span class="pull-right custom-badge">{{valueLoses}}</span></li>
+                            <li>Caudal medio <span class="pull-right custom-badge">{{valueAvgFlow}}</span></li>
+                            <li>Caudal mínimo nocturno <span class="pull-right custom-badge">{{valueNightFlow}}</span></li>
+                            <li>Caudal por m3 <span class="pull-right custom-badge">{{valueVolumePrice}}</span></li>
                         </ul>
                     </div>
                     <h3>Volumenes</h3>
@@ -361,7 +361,7 @@
                                         </div>
                                         <div class="col-xs-6">
                                             <div justgage style="width:80px;height:70px;"
-                                                value="{{valueWeek}}" value-font-color="{{valueFontColor}}"
+                                                value="{{valueGlobal}}" value-font-color="{{valueFontColor}}"
                                                 width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
                                                 value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
                                                 label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"

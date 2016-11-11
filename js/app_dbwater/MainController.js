@@ -163,24 +163,40 @@ Controller.$inject = [
   			$scope.sum_suministrat		= 0;
   			$scope.sum_aportat			= 0;
             
-            placesService.dbWaterGetTown(data.cmuni5_dgc,null,null).success(function(data) {
+            placesService.dbWaterGetTown(data.cmuni5_dgc,data.codi_service,null,null).success(function(data) {
 				log("dbWaterGetTown success: ",data);
 				if(data.status==="Accepted"){  
-					//gauges "rendimiento téorico"
-					if(typeof data.message.day!="undefined"){
-						$scope.valueDay				= data.message.day;
-					}
-					if(typeof data.message.week!="undefined"){
-						$scope.valueWeek			= data.message.week;
-					}
-					if(typeof data.message.month!="undefined"){
-						$scope.valueMonth			= data.message.month;
+					console.log(data.message.performance);
+					//performance
+					if(typeof data.message.performance!="undefined"){
+						$scope.valueHigh	= parseFloat(data.message.performance.high)*100;
+						$scope.valueLow		= parseFloat(data.message.performance.low)*100;
+						$scope.valueGlobal	= parseFloat(data.message.performance.global)*100;
+					} else {
+						//test values for service != 08MDR
+						$scope.valueHigh	= 0.80*100;
+						$scope.valueLow		= 0.50*100;
+						$scope.valueGlobal	= 0.65*100;
 					}
 
-					// test values
-					$scope.valueDay = 80;
-					$scope.valueWeek = 20;
-					
+					//info
+					if(typeof data.message.info!="undefined"){
+						$scope.valueSupplied	= parseFloat(data.message.info.supplied);
+						$scope.valueDistributed	= parseFloat(data.message.info.distributed);
+						$scope.valueLoses		= parseFloat(data.message.info.loses);
+						$scope.valueAvgFlow		= parseFloat(data.message.info.avg_flow);
+						$scope.valueNightFlow	= parseFloat(data.message.info.night_flow);
+						$scope.valueVolumePrice	= parseFloat(data.message.info.volume_price);
+					} else {
+						//test values for service != 08MDR
+						$scope.valueSupplied	= 243;
+						$scope.valueDistributed	= 183;
+						$scope.valueLoses		= 50;
+						$scope.valueAvgFlow		= 10.125;
+						$scope.valueNightFlow	= 18;
+						$scope.valueVolumePrice	= 0;
+					}
+
 					// bar chart fitxa "tendencia últimos 7 días"
 					$scope.labels_fitxa_rend = ['28-10-2016', '29-10-2016', '30-10-2016', '31-10-2016', '01-11-2016', '02-11-2016', '03-11-2016'];
 					$scope.series_fitxa_rend = ['Rendimiento'];
