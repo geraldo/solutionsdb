@@ -6,6 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	<title>Solution DB</title>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $baseHref?>/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="<?php echo $baseHref?>/favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="<?php echo $baseHref?>/manifest.json">
+	<link rel="mask-icon" href="<?php echo $baseHref?>/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="theme-color" content="#ffffff">
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
