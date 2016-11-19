@@ -39,7 +39,7 @@ div.list-with-icon div.icon-container img.icon {
 }
 div.list-with-icon ul,
 div.list-with-icon ol {
-  display: inline-block;
+  display: block;
   border-left: 1px dashed #6a90a4;
   padding-left: 10px;
   margin-left: 25px;
@@ -206,8 +206,8 @@ div.table-list ul li.shoe .custom-badge {
 }
 .window hr {
   border-top-color: #222;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .window h2 {
   color: white;

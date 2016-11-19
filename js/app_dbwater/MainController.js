@@ -38,9 +38,10 @@ Controller.$inject = [
 			mouseX,
 			mouseY,
 			toolTipInstant,
-			layers 							= Array('provincias','municipios','sector','cadastro_parcela'),		//layers contained in dbwater_rend
-			layersForIndentification 		= Array('municipios','sector'),		//layers that can be identified
-			layersStyle 					= Array('provincias_v6','munis_rendimiento_v1','sector_rendimiento_v1','parceles_v1'),
+			//layers 							= Array('provincias','municipios','sector','cadastro_parcela'),		//old geoserver!
+			layers 							= Array('Provincias','Municipios rendimiento','Municipios otros','Sectores','Parcelas'),		//layers contained in dbwater_rend
+			layersForIndentification 		= Array('Municipios','Sector'),		//layers that can be identified
+			layersStyle 					= Array('provincias_v6','munis_rendimiento_v1','sector_rendimiento_v1','parceles_v1'),	//old geoserver!
 			zoomTrigger 					= 15,								//zoom level for trigger active layer change
 			version							= "1.0.0";
 			//$('#info').hide();
@@ -166,7 +167,6 @@ Controller.$inject = [
             placesService.dbWaterGetTown(data.cmuni5_dgc,data.codi_service,null,null).success(function(data) {
 				log("dbWaterGetTown success: ",data);
 				if(data.status==="Accepted"){  
-					console.log(data.message.performance);
 					//performance
 					if(typeof data.message.performance!="undefined"){
 						$scope.valueHigh	= parseFloat(data.message.performance.high)*100;
@@ -208,6 +208,15 @@ Controller.$inject = [
 				            xAxes: [{
 				                display: false
 				            }]
+				        },
+				        tooltips: {
+				        	titleFontSize: 10,
+				        	bodyFontSize: 10,
+				        	footerFontSize: 10,
+				        	titleMarginBottom: 2,
+				        	bodySpacing: 2,
+				        	xPadding: 5,
+				        	yPadding: 5
 				        }
 				    };
 					
@@ -224,6 +233,16 @@ Controller.$inject = [
 				            xAxes: [{
 				                display: false
 				            }]
+				        },
+				        tooltips: {
+				        	position: 'nearest',
+				        	titleFontSize: 10,
+				        	bodyFontSize: 10,
+				        	footerFontSize: 10,
+				        	titleMarginBottom: 2,
+				        	bodySpacing: 2,
+				        	xPadding: 5,
+				        	yPadding: 5
 				        }
 				    };
  

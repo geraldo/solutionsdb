@@ -205,7 +205,7 @@
                         </ul>
                     </div>
                     <h3>Volumenes</h3>
-                    <canvas id="fitxa-linechart" height="120" class="chart chart-line" chart-data="data_fitxa_vol" chart-labels="labels_fitxa_vol" chart-series="series_fitxa_vol" chart-options="options_fitxa_vol" chart-dataset override="datasetOverride"></canvas> 
+                    <canvas id="fitxa-linechart" height="150" class="chart chart-line" chart-data="data_fitxa_vol" chart-labels="labels_fitxa_vol" chart-series="series_fitxa_vol" chart-options="options_fitxa_vol" chart-dataset override="datasetOverride"></canvas> 
                     <hr />
                     <a href="#" class="btn btn-sm btn-primary open-expedient">Ficha</a> Ver ficha completa
                 </div>

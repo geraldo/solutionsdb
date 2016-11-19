@@ -88,16 +88,24 @@ function map_service($http,$rootScope){
         map.setView(view);
 		viewProjection = view.getProjection();
 		viewResolution = view.getResolution();
-				
-		//WMS Layer - Provincias
-		renderWMS(layers[0],layersStyle[0]);
-		//WMS Layer - Municipios 
-		renderWMS(layers[1],layersStyle[1]); 
+
+		//render WMS layers
+		renderWMSqgis(layers[0]);
+		renderWMSqgis(layers[1]); 
 		setActiveLayer(layers[1]);
+		renderWMSqgis(layers[2]); 
+		renderWMSqgis(layers[3]); 
+		renderWMSqgis(layers[4]); 
+		
+		//WMS Layer - Provincias
+		//renderWMS(layers[0],layersStyle[0]);
+		//WMS Layer - Municipios 
+		//renderWMS(layers[1],layersStyle[1]); 
+		//setActiveLayer(layers[1]);
 		//WMS Layer - Sectores 
-		renderWMS(layers[2],layersStyle[2]); 
+		//renderWMS(layers[2],layersStyle[2]); 
 		//WMS Layer - Catastro 
-		renderWMS(layers[3],layersStyle[3]); 
+		//renderWMS(layers[3],layersStyle[3]); 
 		//set style for highlighted geometry
 		setHighLightStyle();							
 
@@ -139,7 +147,7 @@ function map_service($http,$rootScope){
 	}
 		    
 
-
+	/* old geoserver WMS rendering */
 	function renderWMS(layer,style){
 		log("renderWMS("+layer+")");
 		if(currentLayer){
@@ -166,7 +174,28 @@ function map_service($http,$rootScope){
 		renderedLayers.push(newLayer)
 
 	}
-	
+
+	function renderWMSqgis(layer){
+		log("renderWMSqgis("+layer+")");
+		if(currentLayer){
+			map.removeLayer(customLayer);
+		}
+		currentLayer		= layer;
+		var newLayer 		= new ol.layer.Tile({
+								source: new ol.source.TileWMS({
+										url: 		urlWMS,
+										crossOrigin: 'anonymous',
+										params: {
+													'LAYERS'		: layer,
+													'TRANSPARENT': true
+										},
+										serverType: 'qgis'  										
+								})
+    						});
+		map.addLayer(newLayer);
+		renderedLayers.push(newLayer);
+	}
+
 	function setActiveLayer(layerName){
 		log("setActiveLayer("+layerName+")");
 		if(layers.length>0){
@@ -212,8 +241,8 @@ function map_service($http,$rootScope){
 	}
 		
 		
-    	
-	function selectTown(coordinates){
+    /* old geoserver */
+	function selectTownGeo(coordinates){
 		log("selectTown()",coordinates);
 		if(highLightSource){
 		    	highLightSource.clear();
@@ -255,6 +284,100 @@ function map_service($http,$rootScope){
 				});
         	}	
 	}
+
+	function selectTown(coordinates){
+		log("selectTown()",coordinates);
+		if(highLightSource){
+		    	highLightSource.clear();
+		    }
+			var url = activeLayer.getSource().getGetFeatureInfoUrl(
+											coordinates, viewResolution, viewProjection,
+											{'INFO_FORMAT': 'text/xml'}
+			);
+			if (url) {
+			   log("url",url);
+			    
+			    $http.get(url+"&feature_count=100").success(function(response){
+				   //console.log(response);
+
+				   if(response){
+						var xmlDoc = $.parseXML(response),
+  							$xml = $(xmlDoc);
+						var sub_aqp = $xml.find('Attribute[name="sub_aqp"]').attr('value');
+
+						//AQUALIA towns can be indentified	
+						if (sub_aqp === "AQUALIA") {
+							var nmun_cc = $xml.find('Attribute[name="nmun_cc"]').attr('value');
+					        log("selectTown: "+nmun_cc);
+
+					        //************** Highlight town
+					        ///???
+
+					        //************** Send data to DOM
+						    var returnData = getJson($xml);
+		
+						    //Broadcast event for data rendering
+						    $rootScope.$broadcast('featureInfoReceived',returnData);
+					        
+					    } else {
+					    	log("selectTown sub_aqp not AQUALIA: "+sub_aqp);
+					    }
+
+					  /*if(result[0].G.sub_aqp==="AQUALIA"){
+						   //************** Highlight town
+						   var feature = new ol.Feature(result[0].G.geometry);
+						   feature.setStyle(highLightStyle);
+						   // Create vector source and the feature to it.
+						   highLightSource = new ol.source.Vector();
+						   highLightSource.addFeature(feature);
+						   // Create vector layer attached to the vector source.
+						   highLightLayer = new ol.layer.Vector({source: highLightSource});
+						   // Add the vector layer to the map.
+						   map.addLayer(highLightLayer);
+						   //************** END Highlight town
+							
+						   //************** Send data to DOM
+						   var returnData	= result[0].G;
+		
+						   //Broadcast event for data rendering
+						   $rootScope.$broadcast('featureInfoReceived',returnData);
+						   //************** END Send data to DOM
+					   }else{
+						   log("selectTown sub_aqp not AQUALIA: "+result[0].G.sub_aqp);
+					   }*/
+				   }
+				});
+        	}	
+	}
+
+	function getJson(xml) {
+		var json = {};
+		xml.find('Attribute').each(function(index){
+            //console.log($(this).attr('name'), ":", $(this).attr('value'));
+            var value = $(this).attr('value');
+            if ($(this).attr('name') === "geometry") {
+            	//console.log($(this).attr('value'));
+            	var geo = $(this).attr('value').split(" (((");
+            	var type = geo[0];
+            	geo = geo[1].split(")))");
+            	geo = geo[0].split(",");
+            	var geometry = [[]];
+            	
+            	for (var coord in geo) {
+            		coord = geo[coord].split(" ");
+            		geometry[0].push([coord[0],coord[1]]);
+            		//convert to valid geometry
+            		//???
+            	}
+            	
+            	//console.log(geometry);
+            	value = {"type":type,"coordinates":geometry};
+            }
+            json[$(this).attr('name')] = value;
+        });
+        return json;
+	}
+
 	
 	function zoomToTown(extend,coords){
 		var extent    	= [extend.coordinates[0][0][0],extend.coordinates[0][0][1],extend.coordinates[0][2][0],extend.coordinates[0][2][1]];
