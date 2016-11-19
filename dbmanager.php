@@ -20,7 +20,7 @@ class ControllerIndex{
 		$data["baseHref"]	= $this->_system->GetBaseRef();
 		$data["skin"]		= $this->_system->get('skin');
 		$data['env']		= $this->_system->getEnviroment();
-		$data['urlWMS']		= $this->_system->get('urlWMS');
+		$data['urlWMS']		= $this->_system->get('urlWMSdbmanager');
 		$data['token']		= session_id();
 		$data['update']		= $_SESSION['update'];
 		
