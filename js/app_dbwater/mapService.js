@@ -422,13 +422,13 @@ function map_service($http,$rootScope){
 							width : 6 
 						});
 			
-		var _myFill = new ol.style.Fill({
+		/*var _myFill = new ol.style.Fill({
 							color: 'rgba(106, 134, 10, 0.5)'
-						});
+						});*/
 			
 		highLightStyle = new ol.style.Style({
 							stroke : _myStroke,
-							fill : _myFill
+							//fill : _myFill
 						});
 	}
 	
