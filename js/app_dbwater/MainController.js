@@ -155,7 +155,8 @@ Controller.$inject = [
 		$scope.$on('featureInfoReceived', function(event, data) {
 
 			log("featureInfoReceived",data);
-			$scope.townName 			= data.nmun_aq;
+			$scope.townName = data.nmun_aq;
+			if (data.nmun_aq.length > 25) $scope.townName = data.nmun_aq.substring(0,22)+"...";
 			$scope.valueDay				= 0;
 			$scope.valueWeek			= 0;
 			$scope.valueMonth			= 0;

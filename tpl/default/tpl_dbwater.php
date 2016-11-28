@@ -1107,7 +1107,7 @@
     	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     	
     	<!-- Open layers -->
-    	<script src="http://openlayers.org/en/v3.12.1/build/ol.js"></script> 
+    	<script src="http://openlayers.org/en/v3.19.1/build/ol.js"></script> 
         <link rel="stylesheet" href="http://openlayers.org/en/master/css/ol.css" />
         <!-- End Open layers -->
         <!-- angular-bootstrap-ui -->

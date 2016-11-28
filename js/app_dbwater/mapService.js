@@ -118,7 +118,7 @@ function map_service($http,$rootScope){
     	//****************************************************************
     
 		map.on('click', function(evt) {
-			log("click coordinates: "+evt.coordinate);
+			//log("click coordinates: "+evt.coordinate);
 			selectTown(evt.coordinate);
 		});
 
@@ -286,68 +286,51 @@ function map_service($http,$rootScope){
 	}
 
 	function selectTown(coordinates){
-		log("selectTown()",coordinates);
+		//log("selectTown()",coordinates);
 		if(highLightSource){
-		    	highLightSource.clear();
-		    }
-			var url = activeLayer.getSource().getGetFeatureInfoUrl(
-											coordinates, viewResolution, viewProjection,
-											{'INFO_FORMAT': 'text/xml'}
-			);
-			if (url) {
-			   log("url",url);
-			    
-			    $http.get(url+"&feature_count=100").success(function(response){
-				   //console.log(response);
+	    	highLightSource.clear();
+	    }
+		var url = activeLayer.getSource().getGetFeatureInfoUrl(
+										coordinates, viewResolution, viewProjection,
+										{'INFO_FORMAT': 'text/xml'}
+		);
+		if (url) {
+		   log("url",url);
+		    
+		    $http.get(url+"&feature_count=100").success(function(response){
+			   //console.log(response);
 
-				   if(response){
-						var xmlDoc = $.parseXML(response),
-  							$xml = $(xmlDoc);
-						var sub_aqp = $xml.find('Attribute[name="sub_aqp"]').attr('value');
+			    if(response) {
+					var xmlDoc = $.parseXML(response),
+							$xml = $(xmlDoc);
+					var sub_aqp = $xml.find('Attribute[name="sub_aqp"]').attr('value');
 
-						//AQUALIA towns can be indentified	
-						if (sub_aqp === "AQUALIA") {
-							var nmun_cc = $xml.find('Attribute[name="nmun_cc"]').attr('value');
-					        log("selectTown: "+nmun_cc);
+					//AQUALIA towns can be indentified	
+					if (sub_aqp === "AQUALIA") {
+						var nmun_cc = $xml.find('Attribute[name="nmun_cc"]').attr('value');
+				        log("selectTown: "+nmun_cc);
 
-					        //************** Highlight town
-					        ///???
+					    var returnData = getJson($xml);
 
-					        //************** Send data to DOM
-						    var returnData = getJson($xml);
-		
-						    //Broadcast event for data rendering
-						    $rootScope.$broadcast('featureInfoReceived',returnData);
-					        
-					    } else {
-					    	log("selectTown sub_aqp not AQUALIA: "+sub_aqp);
-					    }
+				        //Highlight town
+						highLightSource = new ol.source.Vector({
+						  features: (new ol.format.GeoJSON()).readFeatures(returnData.geometry)
+						});
+						highLightLayer = new ol.layer.Vector({
+						  source: highLightSource,
+						  style: highLightStyle
+						});
+						map.addLayer(highLightLayer);
 
-					  /*if(result[0].G.sub_aqp==="AQUALIA"){
-						   //************** Highlight town
-						   var feature = new ol.Feature(result[0].G.geometry);
-						   feature.setStyle(highLightStyle);
-						   // Create vector source and the feature to it.
-						   highLightSource = new ol.source.Vector();
-						   highLightSource.addFeature(feature);
-						   // Create vector layer attached to the vector source.
-						   highLightLayer = new ol.layer.Vector({source: highLightSource});
-						   // Add the vector layer to the map.
-						   map.addLayer(highLightLayer);
-						   //************** END Highlight town
-							
-						   //************** Send data to DOM
-						   var returnData	= result[0].G;
-		
-						   //Broadcast event for data rendering
-						   $rootScope.$broadcast('featureInfoReceived',returnData);
-						   //************** END Send data to DOM
-					   }else{
-						   log("selectTown sub_aqp not AQUALIA: "+result[0].G.sub_aqp);
-					   }*/
-				   }
-				});
-        	}	
+					    //Broadcast event for data rendering
+					    $rootScope.$broadcast('featureInfoReceived',returnData);
+				        
+				    } else {
+				    	log("selectTown sub_aqp not AQUALIA: "+sub_aqp);
+				    }
+			    }
+			});
+    	}	
 	}
 
 	function getJson(xml) {
@@ -363,15 +346,14 @@ function map_service($http,$rootScope){
             	geo = geo[0].split(",");
             	var geometry = [[]];
             	
+           		//convert to valid geometry
             	for (var coord in geo) {
-            		coord = geo[coord].split(" ");
-            		geometry[0].push([coord[0],coord[1]]);
-            		//convert to valid geometry
-            		//???
+            		coord = geo[coord].trim().split(" ");
+            		geometry[0].push([parseFloat(coord[0]),parseFloat(coord[1])]);
             	}
             	
-            	//console.log(geometry);
-            	value = {"type":type,"coordinates":geometry};
+            	value = {"type":type,"coordinates":[geometry]};
+	            //console.log(JSON.stringify(value));
             }
             json[$(this).attr('name')] = value;
         });
@@ -440,13 +422,13 @@ function map_service($http,$rootScope){
 							width : 6 
 						});
 			
-		/*var _myFill = new ol.style.Fill({
+		var _myFill = new ol.style.Fill({
 							color: 'rgba(106, 134, 10, 0.5)'
-						});*/
+						});
 			
 		highLightStyle = new ol.style.Style({
 							stroke : _myStroke,
-							//fill : _myFill
+							fill : _myFill
 						});
 	}
 	
