@@ -573,6 +573,12 @@ div.table-list ul li.shoe .custom-badge {
 .window.infoviz .content .row #infoviz-tag {
   margin: 10px 0 10px;
 }
+.window.infoviz .content .row #infoviz-tag .infoviz-comparativa {
+  float: right;
+}
+.window.infoviz .content .row #infoviz-tag .infoviz-comparativa .active {
+  background-color: #8aa8b7;
+}
 .window.infoviz .content .row .infoviz-tagval {
   color: white;
   border-radius: 10px;
@@ -580,13 +586,13 @@ div.table-list ul li.shoe .custom-badge {
   padding: 2px 10px;
 }
 .window.infoviz .content .row .sum_aportat {
-  background-color: #ff0000;
+  background-color: #edae1a;
 }
 .window.infoviz .content .row .sum_suministrat {
-  background-color: #00ff00;
+  background-color: #51caef;
 }
 .window.infoviz .content .row .sum_rebuig {
-  background-color: #0000ff;
+  background-color: #6bc24c;
 }
 .window.infoviz .content .row .closeButton {
   cursor: pointer;

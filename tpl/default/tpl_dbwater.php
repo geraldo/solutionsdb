@@ -95,9 +95,6 @@
                             <div id="infoviz-datepicker1"></div>
                             <p class="infoviz-title">Fecha final:</p>
                             <div id="infoviz-datepicker2"></div>
-                            
-                            <input type="radio" name="datatype" value="data-real"> Datos reales (máx 8 días)<br>
-                            <input type="radio" name="datatype" value="data-day" checked="checked"> Datos diarios
 
                             <p class="infoviz-title">Servicio:</p>
                             <select id="infoviz-municipi">
@@ -122,10 +119,12 @@
                         </div>
 
                         <div class="col-xs-9">
-                            <div id="infoviz-tag"></div>
+                            <div id="infoviz-tag">
+                                <a href="#" class="btn btn-sm btn-primary infoviz-comparativa">Comparativa</a>
+                            </div>
                             <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
-                            <canvas id="infoviz-linechart1" width="600" height="300" class="chart chart-line"></canvas> 
-                            <canvas id="infoviz-linechart2" width="600" height="140" class="chart chart-line"></canvas> 
+                            <canvas id="infoviz-linechart1" width="600" height="340" class="chart chart-line"></canvas> 
+                            <canvas id="infoviz-linechart2" width="600" height="100" class="chart chart-line"></canvas> 
 
                         </div>
 
@@ -825,15 +824,19 @@
                     var chartData2 = {};
                     chartData1.labels = [];
                     chartData2.labels = [];
-                    var datasets1 = new Array($(".infoviz-tagval").length);
-                    var datasets2 = new Array($(".infoviz-tagval").length);
+                    var size = $(".infoviz-tagval").length;
+                    //if ($('.infoviz-comparativa').hasClass("active")) size *= 2;
+                    var datasets1 = new Array(size);
+                    var datasets2 = new Array(size);
 
                     if (datasets1.length > 0) {
 
                         //get selected data
                         $(".infoviz-tagval").each(function( index ) {
+                            var index2 = index+$(".infoviz-tagval").length;
+                            //console.log(index,index2,datasets1.length);
 
-                            datasets1[index] = {
+                            var style = {
                                 fill: false,
                                 lineTension: 0.1,
                                 backgroundColor: "rgba(75,192,192,0.4)",
@@ -853,53 +856,73 @@
                                 data: [],
                                 spanGaps: false,
                             };
+                            datasets1[index] = style;
                             datasets1[index].label = $(this).data("value"); 
-
-                            datasets2[index] = {
-                                fill: false,
-                                lineTension: 0.1,
-                                backgroundColor: "rgba(75,192,192,0.4)",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "rgba(75,192,192,1)",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                                pointHoverBorderColor: "rgba(220,220,220,1)",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                data: [],
-                                spanGaps: false,
-                            };
+                            datasets2[index] = style;
                             datasets2[index].label = $(this).data("value"); 
 
                             //line color
                             if ($(this).hasClass("sum_aportat")) {
-                                datasets1[index].borderColor = "#ff0000";
-                                datasets2[index].borderColor = "#ff0000";
+                                datasets1[index].borderColor = "#edae1a";
+                                datasets2[index].borderColor = "#edae1a";
                             } 
                             else if ($(this).hasClass("sum_suministrat")) {
-                                datasets1[index].borderColor = "#00ff00";
-                                datasets2[index].borderColor = "#00ff00";
+                                datasets1[index].borderColor = "#51caef";
+                                datasets2[index].borderColor = "#51caef";
                             }
                             else if ($(this).hasClass("sum_rebuig")) {
-                                datasets1[index].borderColor = "#0000ff";
-                                datasets2[index].borderColor = "#0000ff";
+                                datasets1[index].borderColor = "#6bc24c";
+                                datasets2[index].borderColor = "#6bc24c";
+                            }
+
+                            //comparativa???
+                            if ($('.infoviz-comparativa').hasClass("active")) {
+                                datasets1[index2] = style;
+                                datasets2[index2] = style;
+
+                                datasets1[index2].borderDash = [5, 15];
+                                datasets2[index2].borderColor = [5, 15];
+
+                                if ($(this).hasClass("sum_aportat")) {
+                                    datasets1[index2].borderColor = "#edae1a";
+                                    datasets2[index2].borderColor = "#edae1a";
+                                } 
+                                else if ($(this).hasClass("sum_suministrat")) {
+                                    datasets1[index2].borderColor = "#51caef";
+                                    datasets2[index2].borderColor = "#51caef";
+                                }
+                                else if ($(this).hasClass("sum_rebuig")) {
+                                    datasets1[index2].borderColor = "#6bc24c";
+                                    datasets2[index2].borderColor = "#6bc24c";
+                                }
                             }
                         });
 
                         // get data from datepicker
                         var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
-                            fechaEnd = $('#infoviz-datepicker2').datepicker("getDate");
+                            fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
+                            fechaBeginAbs = new Date("2016-06-01"),
+                            fechaEndAbs = new Date("2016-07-28");
+
+                            //one year before
+                        var fechaBeginComp = $('#infoviz-datepicker1').datepicker("getDate"),
+                            fechaEndComp = $('#infoviz-datepicker2').datepicker("getDate"),
+                            fechaBeginCompAbs = new Date("2016-06-01"),
+                            fechaEndCompAbs = new Date("2016-07-28");
+
+                        fechaBeginComp.setFullYear(fechaBeginComp.getFullYear() - 1),
+                        fechaEndComp.setFullYear(fechaEndComp.getFullYear() - 1),
+                        fechaBeginCompAbs.setFullYear(fechaBeginCompAbs.getFullYear() - 1),
+                        fechaEndCompAbs.setFullYear(fechaEndCompAbs.getFullYear() - 1);
+                        
+                        //console.log("date",fechaBegin,fechaEnd,fechaBeginAbs,fechaEndAbs);
+                        //console.log("comp",fechaBeginComp,fechaEndComp,fechaBeginCompAbs,fechaEndCompAbs);
 
                         //fill datasets
                         for (i in scope.vizdataList) {
                             var register = scope.vizdataList[i];
                             var fecha = new Date(register["data"]);
+                            //console.log(register["data"]);
 
                             //fill dataset for line chart with date zoom
                             if (fecha >= fechaBegin && fecha <= fechaEnd) {
@@ -910,13 +933,32 @@
                                 });
                             }
 
-                            //fill dataset for line chart with all dates
-                            chartData2.labels.push(register['data']);
-                            //chartData2.labels.push(new Date(register['data']));
+                            //in date limits?
+                            if (fecha >= fechaBeginAbs && fecha <= fechaEndAbs) {
+                                //fill dataset for line chart with all dates in date range
+                                chartData2.labels.push(register['data']);
+                                //chartData2.labels.push(new Date(register['data']));
 
-                            $(".infoviz-tagval").each(function( index ) {
-                                datasets2[index].data.push(register[$(this).data("value")]);
-                            });
+                                $(".infoviz-tagval").each(function( index ) {
+                                    datasets2[index].data.push(register[$(this).data("value")]);
+                                });
+                            }
+
+                            //comparativa: fecha - 1 year                            
+                            if ($('.infoviz-comparativa').hasClass("active")) {
+                                if (fecha >= fechaBeginComp && fecha <= fechaEndComp) {
+                                    $(".infoviz-tagval").each(function( index ) {
+                                        datasets1[index+$(".infoviz-tagval").length].data.push(register[$(this).data("value")]);
+                                    });
+                                }
+
+                                //in date limits?
+                                if (fecha >= fechaBeginCompAbs && fecha <= fechaEndCompAbs) {
+                                    $(".infoviz-tagval").each(function( index ) {
+                                        datasets2[index+$(".infoviz-tagval").length].data.push(register[$(this).data("value")]);
+                                    });
+                                }
+                            }
                         }
                         chartData1.datasets = datasets1;
                         chartData2.datasets = datasets2;
@@ -925,8 +967,10 @@
                         var fechaRegisterBegin = new Date(scope.vizdataList[0]['data']),
                             fechaRegisterEnd = new Date(scope.vizdataList[scope.vizdataList.length-1]['data']);
 
-                        if (fechaBegin < fechaRegisterBegin) fechaBegin = fechaRegisterBegin;
-                        if (fechaEnd > fechaRegisterEnd) fechaEnd = fechaRegisterEnd;
+                        if (fechaBegin < fechaRegisterBegin) 
+                            fechaBegin = fechaRegisterBegin;
+                        if (fechaEnd > fechaRegisterEnd) 
+                            fechaEnd = fechaRegisterEnd;
 
                         //set zoom highlight
                         chartData2.xHighlightRange = {
@@ -949,7 +993,7 @@
                                             //min: new Date("2016-06-01"),
                                             //max: new Date("2016-07-27"),
                                             displayFormats: {
-                                                day: "DD-MM"
+                                                day: "DD-MM-YY"
                                             }
                                         }
                                     }]
@@ -967,17 +1011,23 @@
                                         type: "time",
                                         time: {
                                             unit: "week",
-                                            unitStepSize: "2",
+                                            unitStepSize: "4",
                                             //min: new Date("2016-06-01"),
                                             //max: new Date("2016-07-27"),
                                             displayFormats: {
-                                                week: "MM-YY (W)"
+                                                week: "MM-YY"
                                             }
                                         }
                                     }]
                                 }
                             }
                         });
+
+                        //add button Comparativa
+                        $('.infoviz-comparativa').show();
+                    } else {
+                        $('.infoviz-comparativa').hide();
+                        $('.infoviz-comparativa').removeClass('active');
                     }
                 }
 
@@ -1030,15 +1080,21 @@
                     $(".window.infoviz").toggle();
                     setInfovizWindowPosition();
 
-                    //set start and end date for datepicker                
+                    //set start and end date for datepicker 
                     var onemonthago = new Date();
                     onemonthago.setMonth(onemonthago.getMonth() - 1);
                     var onedayago = new Date();
                     onedayago.setDate(onedayago.getDate() - 1);
-                    $('#infoviz-datepicker1').datepicker('setDate', onemonthago);
-                    $('#infoviz-datepicker1').datepicker('update', onemonthago);
-                    $('#infoviz-datepicker2').datepicker('setDate', onedayago);
-                    $('#infoviz-datepicker2').datepicker('update', onedayago);
+
+                    // temporalmente lo ponemos a junio- julio ya que son los meses donde tenemos datos               
+                    onemonthago = new Date("2016-06-01");
+                    onedayago = new Date("2016-07-28");
+                    /////////////
+
+                    $('#infoviz-datepicker1').data({date: onemonthago});
+                    $('#infoviz-datepicker1').datepicker('update');
+                    $('#infoviz-datepicker2').data({date: onedayago});
+                    $('#infoviz-datepicker2').datepicker('update');
 
                     return false;
                 });
@@ -1078,8 +1134,9 @@
 
                         // draw line chart if not already done                    
                         if (!$(".infoviz-tagval."+selectedData).length) {
+                            //$(".infoviz-tagval").length < 1)
                             // add data tag
-                            $("#infoviz-tag").append("<span data-value='"+selectedData+"' class='infoviz-tagval "+selectedData+"'>"+selectedDataCodi+" "+selectedDataLabel+" <span class='closeButton'>x</span></span>");
+                            $("#infoviz-tag").prepend("<span data-value='"+selectedData+"' class='infoviz-tagval "+selectedData+"'>"+selectedDataCodi+" "+selectedDataLabel+" <span class='closeButton'>x</span></span>");
                             $(".closeButton").on("click", function(e){
                                 $(this).parent().remove();
                                 // redraw line chart
@@ -1091,6 +1148,14 @@
                     }
 
                     return false;
+                });
+
+                $('.infoviz-comparativa').click(function(){
+                    if ($(this).hasClass("active"))
+                        $(this).removeClass("active");
+                    else
+                        $(this).addClass("active");
+                    loadInfoviz();
                 });
             });
 
