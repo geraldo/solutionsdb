@@ -882,8 +882,8 @@
                                 datasets1[index2] = style;
                                 datasets2[index2] = style;
 
-                                datasets1[index2].borderDash = [5, 15];
-                                datasets2[index2].borderDash = [5, 15];
+                                datasets1[index2].borderDash = [2, 3];
+                                datasets2[index2].borderDash = [2, 3];
 
                                 if ($(this).hasClass("sum_aportat")) {
                                     datasets1[index2].borderColor = "#edae1a";
