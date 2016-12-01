@@ -200,7 +200,7 @@
                             <li>Volumen de pérdida <span class="pull-right custom-badge">{{valueLoses}}</span></li>
                             <li>Caudal medio <span class="pull-right custom-badge">{{valueAvgFlow}}</span></li>
                             <li>Caudal mínimo nocturno <span class="pull-right custom-badge">{{valueNightFlow}}</span></li>
-                            <li>Caudal por m3 <span class="pull-right custom-badge">{{valueVolumePrice}}</span></li>
+                            <li>€ por m³ <span class="pull-right custom-badge">{{valueVolumePrice}}</span></li>
                         </ul>
                     </div>
                     <h3>Volumenes</h3>
@@ -356,7 +356,7 @@
                                 <div class="col-xs-3 sepparated">
                                     <div class="donut-with-title">
                                         <div class="col-xs-6">
-                                            <span>Rendimiento</br />total</span>
+                                            <span>Rendimiento</br />real anual</span>
                                         </div>
                                         <div class="col-xs-6">
                                             <div justgage style="width:80px;height:70px;"
@@ -825,16 +825,18 @@
                     chartData1.labels = [];
                     chartData2.labels = [];
                     var size = $(".infoviz-tagval").length;
-                    //if ($('.infoviz-comparativa').hasClass("active")) size *= 2;
+                    if ($('.infoviz-comparativa').hasClass("active")) size = size * 2;
                     var datasets1 = new Array(size);
                     var datasets2 = new Array(size);
+
+                    console.log(size,datasets1);
 
                     if (datasets1.length > 0) {
 
                         //get selected data
                         $(".infoviz-tagval").each(function( index ) {
                             var index2 = index+$(".infoviz-tagval").length;
-                            //console.log(index,index2,datasets1.length);
+                            console.log(index,index2,datasets1.length);
 
                             var style = {
                                 fill: false,
@@ -881,7 +883,7 @@
                                 datasets2[index2] = style;
 
                                 datasets1[index2].borderDash = [5, 15];
-                                datasets2[index2].borderColor = [5, 15];
+                                datasets2[index2].borderDash = [5, 15];
 
                                 if ($(this).hasClass("sum_aportat")) {
                                     datasets1[index2].borderColor = "#edae1a";
