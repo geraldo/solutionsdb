@@ -120,6 +120,8 @@
 
                         <div class="col-xs-9">
                             <div id="infoviz-tag">
+                                <a href="#" class="btn btn-sm btn-primary export pdf">PDF</a>
+                                <a href="#" class="btn btn-sm btn-primary export excel">Excel</a>                               
                                 <a href="#" class="btn btn-sm btn-primary infoviz-comparativa">Comparativa</a>
                             </div>
                             <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
@@ -829,14 +831,14 @@
                     var datasets1 = new Array(size);
                     var datasets2 = new Array(size);
 
-                    console.log(size,datasets1);
+                    //console.log(size,datasets1);
 
                     if (datasets1.length > 0) {
 
                         //get selected data
                         $(".infoviz-tagval").each(function( index ) {
                             var index2 = index+$(".infoviz-tagval").length;
-                            console.log(index,index2,datasets1.length);
+                            //console.log(index,index2,datasets1.length);
 
                             var style = {
                                 fill: false,
@@ -1026,8 +1028,10 @@
                         });
 
                         //add button Comparativa
+                        $('.export').show();
                         $('.infoviz-comparativa').show();
                     } else {
+                        $('.export').hide();
                         $('.infoviz-comparativa').hide();
                         $('.infoviz-comparativa').removeClass('active');
                     }
@@ -1152,6 +1156,53 @@
                     return false;
                 });
 
+                $('.export.pdf').click(function(){
+                    html2canvas($("#infoviz-linechart1"), {
+                        onrendered: function(canvas) {         
+                            var imgData = canvas.toDataURL(
+                                'image/png');              
+                            var doc = new jsPDF('p', 'mm');
+                            doc.addImage(imgData, 'PNG', 10, 10);
+                            doc.save('export.pdf');
+                        }
+                    });
+                });
+
+                $('.export.excel').click(function(){
+                    var scope = angular.element("#angularAppContainer").scope();
+
+                    //fill datasets
+                    /*var csv = new Array();
+                    for (i in scope.vizdataList) {
+                        var register = scope.vizdataList[i];
+
+                    }*/
+
+                    var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
+                    var str = '';
+
+                    for (var i = 0; i < array.length; i++) {
+                        var line = '';
+                        for (var index in array[i]) {
+                            if (line != '') line += ','
+
+                            line += array[i][index];
+                        }
+
+                        str += line + '\r\n';
+                    }
+
+                    if (str == null) return;
+
+                    str = 'data:text/csv;charset=utf-8,' + str;
+                    var data = encodeURI(str);
+
+                    var link = document.createElement('a');
+                    link.setAttribute('href', data);
+                    link.setAttribute('download', 'export.csv');
+                    link.click();
+                });
+
                 $('.infoviz-comparativa').click(function(){
                     if ($(this).hasClass("active"))
                         $(this).removeClass("active");
@@ -1198,6 +1249,8 @@
         <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.es.min.js"></script> 
+        <script src="js/libs/html2canvas.js"></script>
+        <script src="js/libs/jspdf.min.js"></script>
         <!-- end datatables -->
         <!-- Application -->
     	<script src="js/app_dbwater/app.js"></script>

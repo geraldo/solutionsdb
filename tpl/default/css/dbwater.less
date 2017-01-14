@@ -3,6 +3,10 @@
 @color-window-shadow: #808080;
 @color-window-text: rgb(150, 150, 150);
 
+body{
+    overflow:hidden;
+}
+
 .btn{
     border-radius: 0;
     box-shadow: none;
@@ -680,8 +684,14 @@ div.table-list{
             #infoviz-tag{
                 margin: 10px 0 10px;
 
+                .export{
+                    float:right;
+                    margin: 0 2px;
+                }
+
                 .infoviz-comparativa{
                     float:right;
+                    margin: 0 2px;
 
                     .active{
                         background-color:#8aa8b7;
