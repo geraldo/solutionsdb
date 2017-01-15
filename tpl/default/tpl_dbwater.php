@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css">
         <link rel="stylesheet" href="js/libs/angular-datatables.min.css">
+        <link rel="stylesheet" href="js/libs/dygraph.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
 		<link rel="stylesheet" href="tpl/default/css/dbwater.css" type="text/css" charset="utf-8">
 		<link rel="stylesheet" href="tpl/default/css/animate.css" type="text/css" charset="utf-8">
@@ -120,13 +121,13 @@
 
                         <div class="col-xs-9">
                             <div id="infoviz-tag">
-                                <a href="#" class="btn btn-sm btn-primary export pdf">PDF</a>
-                                <a href="#" class="btn btn-sm btn-primary export excel">Excel</a>                               
-                                <a href="#" class="btn btn-sm btn-primary infoviz-comparativa">Comparativa</a>
+                                <a href="#" class="btn btn-xs btn-primary export pdf">PDF</a>
+                                <a href="#" class="btn btn-xs btn-primary export excel">Excel</a>                               
+                                <a href="#" class="btn btn-xs btn-primary infoviz-comparativa">Comparativa</a>
                             </div>
-                            <!--<canvas id="infoviz-linechart" width="600" height="400"></canvas>-->
-                            <canvas id="infoviz-linechart1" width="600" height="340" class="chart chart-line"></canvas> 
-                            <canvas id="infoviz-linechart2" width="600" height="100" class="chart chart-line"></canvas> 
+                            <div id="infoviz-linechart" style="width:686px;height:420px"></div>
+                            <!--<canvas id="infoviz-linechart1" width="600" height="340" class="chart chart-line"></canvas> 
+                            <canvas id="infoviz-linechart2" width="600" height="100" class="chart chart-line"></canvas> -->
 
                         </div>
 
@@ -830,6 +831,9 @@
                     if ($('.infoviz-comparativa').hasClass("active")) size = size * 2;
                     var datasets1 = new Array(size);
                     var datasets2 = new Array(size);
+                    var suministratVis = false,
+                        aportatVis = false,
+                        rebuigVis = false;
 
                     //console.log(size,datasets1);
 
@@ -869,14 +873,17 @@
                             if ($(this).hasClass("sum_aportat")) {
                                 datasets1[index].borderColor = "#edae1a";
                                 datasets2[index].borderColor = "#edae1a";
+                                aportatVis = true;
                             } 
                             else if ($(this).hasClass("sum_suministrat")) {
                                 datasets1[index].borderColor = "#51caef";
                                 datasets2[index].borderColor = "#51caef";
+                                suministratVis = true;
                             }
                             else if ($(this).hasClass("sum_rebuig")) {
                                 datasets1[index].borderColor = "#6bc24c";
                                 datasets2[index].borderColor = "#6bc24c";
+                                rebuigVis = true;
                             }
 
                             //comparativa???
@@ -983,7 +990,7 @@
                         }
 
                         //Initialising chartjs linechart for infoviz
-                        var ctx1 = $("#infoviz-linechart1");
+                        /*var ctx1 = $("#infoviz-linechart1");
                         var myLineChart1 = new Chart(ctx1, {
                             type: 'line',
                             data: chartData1,
@@ -1025,7 +1032,21 @@
                                     }]
                                 }
                             }
-                        });
+                        });*/
+
+                        new Dygraph(
+                            document.getElementById("infoviz-linechart"),
+                            getCSVDataChart,
+                            {
+                                legend: 'follow',
+                                labelsSeparateLines: true,
+                                visibility: [suministratVis, aportatVis, rebuigVis],
+                                showRangeSelector: true,
+                                rangeSelectorHeight: 30,
+                                rangeSelectorPlotStrokeColor: 'blue',
+                                rangeSelectorPlotFillColor: 'white'
+                            }
+                        );
 
                         //add button Comparativa
                         $('.export').show();
@@ -1169,36 +1190,8 @@
                 });
 
                 $('.export.excel').click(function(){
-                    var scope = angular.element("#angularAppContainer").scope();
-
-                    //fill datasets
-                    /*var csv = new Array();
-                    for (i in scope.vizdataList) {
-                        var register = scope.vizdataList[i];
-
-                    }*/
-
-                    var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
-                    var str = '';
-
-                    for (var i = 0; i < array.length; i++) {
-                        var line = '';
-                        for (var index in array[i]) {
-                            if (line != '') line += ','
-
-                            line += array[i][index];
-                        }
-
-                        str += line + '\r\n';
-                    }
-
-                    if (str == null) return;
-
-                    str = 'data:text/csv;charset=utf-8,' + str;
-                    var data = encodeURI(str);
-
                     var link = document.createElement('a');
-                    link.setAttribute('href', data);
+                    link.setAttribute('href', getCSVData());
                     link.setAttribute('download', 'export.csv');
                     link.click();
                 });
@@ -1210,6 +1203,51 @@
                         $(this).addClass("active");
                     loadInfoviz();
                 });
+
+                function getCSVData() {
+                    var scope = angular.element("#angularAppContainer").scope();
+                    var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
+                    var str = '';
+
+                    for (var i = 0; i < array.length; i++) {
+                        var line = '';
+                        for (var index in array[i]) {
+                            if (line != '') line += ',';
+
+                            line += array[i][index];
+                        }
+
+                        str += line + '\r\n';
+                    }
+
+                    if (str == null) return;
+
+                    str = 'data:text/csv;charset=utf-8,' + str;
+                    return encodeURI(str);
+                }
+
+                function getCSVDataChart() {
+                    var scope = angular.element("#angularAppContainer").scope();
+                    var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
+                    var sc = array[0]['service_code'];
+                    var str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido'+'\r\n';
+
+                    for (var i = 0; i < array.length; i++) {
+                        var line = '';
+                        for (var index in array[i]) {
+                            if (line != '') line += ',';
+                            if (index === 'date') line += array[i][index].replace('-', '');
+                            if (index != 'id' && index != 'service_code') line += array[i][index];
+                        }
+
+                        str += line + '\r\n';
+                    }
+
+                    if (str == null) return;
+
+                    str = 'data:text/csv;charset=utf-8,' + str;
+                    return encodeURI(str);
+                }
             });
 
             Date.prototype.yyyymmdd = function() {
@@ -1243,6 +1281,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
 		<script src="js/libs/angular-chart.min.js"></script>
         <script src="js/libs/angular-datatables.min.js"></script>
+        <script src="js/libs/dygraph.min.js"></script>
 		<!-- end charts -->
         <!-- datatables and datepicker -->
         <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
