@@ -1178,7 +1178,7 @@
                 });
 
                 $('.export.pdf').click(function(){
-                    html2canvas($("#infoviz-linechart1"), {
+                    html2canvas($("#infoviz-linechart").first().first(), {
                         onrendered: function(canvas) {         
                             var imgData = canvas.toDataURL(
                                 'image/png');              
