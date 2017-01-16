@@ -510,9 +510,12 @@
                     $(this).tab('show')
                 });
 
+                //global vars
+                var linechart;
+
                 //highlight infoviz line chart
                 // The original draw function for the line chart. This will be applied after we have drawn our highlight range (as a rectangle behind the line chart).
-                var originalLineDraw = Chart.controllers.line.prototype.draw;
+                /*var originalLineDraw = Chart.controllers.line.prototype.draw;
                 // Extend the line chart, in order to override the draw function.
                 Chart.helpers.extend(Chart.controllers.line.prototype, {
                   draw : function() {
@@ -572,7 +575,7 @@
                     // Apply the original draw function for the line chart.
                     originalLineDraw.apply(this, arguments);
                   }
-                });
+                });*/
 
                 
                 // Adjust the right window.
@@ -820,227 +823,65 @@
                 }
 
                 //load infoviz
-                function loadInfoviz(){
-                    var scope = angular.element("#angularAppContainer").scope();
-
-                    var chartData1 = {};
-                    var chartData2 = {};
-                    chartData1.labels = [];
-                    chartData2.labels = [];
-                    var size = $(".infoviz-tagval").length;
-                    if ($('.infoviz-comparativa').hasClass("active")) size = size * 2;
-                    var datasets1 = new Array(size);
-                    var datasets2 = new Array(size);
+                function loadInfoviz(del){
                     var suministratVis = false,
                         aportatVis = false,
-                        rebuigVis = false;
+                        rebuigVis = false,
+                        suministratVisComp = false,
+                        aportatVisComp = false,
+                        rebuigVisComp = false;
 
-                    //console.log(size,datasets1);
-
-                    if (datasets1.length > 0) {
-
-                        //get selected data
-                        $(".infoviz-tagval").each(function( index ) {
-                            var index2 = index+$(".infoviz-tagval").length;
-                            //console.log(index,index2,datasets1.length);
-
-                            var style = {
-                                fill: false,
-                                lineTension: 0.1,
-                                backgroundColor: "rgba(75,192,192,0.4)",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "rgba(75,192,192,1)",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                                pointHoverBorderColor: "rgba(220,220,220,1)",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                data: [],
-                                spanGaps: false,
-                            };
-                            datasets1[index] = style;
-                            datasets1[index].label = $(this).data("value"); 
-                            datasets2[index] = style;
-                            datasets2[index].label = $(this).data("value"); 
-
-                            //line color
-                            if ($(this).hasClass("sum_aportat")) {
-                                datasets1[index].borderColor = "#edae1a";
-                                datasets2[index].borderColor = "#edae1a";
-                                aportatVis = true;
-                            } 
-                            else if ($(this).hasClass("sum_suministrat")) {
-                                datasets1[index].borderColor = "#51caef";
-                                datasets2[index].borderColor = "#51caef";
-                                suministratVis = true;
-                            }
-                            else if ($(this).hasClass("sum_rebuig")) {
-                                datasets1[index].borderColor = "#6bc24c";
-                                datasets2[index].borderColor = "#6bc24c";
-                                rebuigVis = true;
-                            }
-
-                            //comparativa???
-                            if ($('.infoviz-comparativa').hasClass("active")) {
-                                datasets1[index2] = style;
-                                datasets2[index2] = style;
-
-                                datasets1[index2].borderDash = [2, 3];
-                                datasets2[index2].borderDash = [2, 3];
-
-                                if ($(this).hasClass("sum_aportat")) {
-                                    datasets1[index2].borderColor = "#edae1a";
-                                    datasets2[index2].borderColor = "#edae1a";
-                                } 
-                                else if ($(this).hasClass("sum_suministrat")) {
-                                    datasets1[index2].borderColor = "#51caef";
-                                    datasets2[index2].borderColor = "#51caef";
-                                }
-                                else if ($(this).hasClass("sum_rebuig")) {
-                                    datasets1[index2].borderColor = "#6bc24c";
-                                    datasets2[index2].borderColor = "#6bc24c";
-                                }
-                            }
-                        });
-
-                        // get data from datepicker
-                        var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
-                            fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
-                            fechaBeginAbs = new Date("2016-06-01"),
-                            fechaEndAbs = new Date("2016-07-28");
-
-                            //one year before
-                        var fechaBeginComp = $('#infoviz-datepicker1').datepicker("getDate"),
-                            fechaEndComp = $('#infoviz-datepicker2').datepicker("getDate"),
-                            fechaBeginCompAbs = new Date("2016-06-01"),
-                            fechaEndCompAbs = new Date("2016-07-28");
-
-                        fechaBeginComp.setFullYear(fechaBeginComp.getFullYear() - 1),
-                        fechaEndComp.setFullYear(fechaEndComp.getFullYear() - 1),
-                        fechaBeginCompAbs.setFullYear(fechaBeginCompAbs.getFullYear() - 1),
-                        fechaEndCompAbs.setFullYear(fechaEndCompAbs.getFullYear() - 1);
-                        
-                        //console.log("date",fechaBegin,fechaEnd,fechaBeginAbs,fechaEndAbs);
-                        //console.log("comp",fechaBeginComp,fechaEndComp,fechaBeginCompAbs,fechaEndCompAbs);
-
-                        //fill datasets
-                        for (i in scope.vizdataList) {
-                            var register = scope.vizdataList[i];
-                            var fecha = new Date(register["data"]);
-                            //console.log(register["data"]);
-
-                            //fill dataset for line chart with date zoom
-                            if (fecha >= fechaBegin && fecha <= fechaEnd) {
-                                chartData1.labels.push(register['data']);
-
-                                $(".infoviz-tagval").each(function( index ) {
-                                    datasets1[index].data.push(register[$(this).data("value")]);
-                                });
-                            }
-
-                            //in date limits?
-                            if (fecha >= fechaBeginAbs && fecha <= fechaEndAbs) {
-                                //fill dataset for line chart with all dates in date range
-                                chartData2.labels.push(register['data']);
-                                //chartData2.labels.push(new Date(register['data']));
-
-                                $(".infoviz-tagval").each(function( index ) {
-                                    datasets2[index].data.push(register[$(this).data("value")]);
-                                });
-                            }
-
-                            //comparativa: fecha - 1 year                            
-                            if ($('.infoviz-comparativa').hasClass("active")) {
-                                if (fecha >= fechaBeginComp && fecha <= fechaEndComp) {
-                                    $(".infoviz-tagval").each(function( index ) {
-                                        datasets1[index+$(".infoviz-tagval").length].data.push(register[$(this).data("value")]);
-                                    });
-                                }
-
-                                //in date limits?
-                                if (fecha >= fechaBeginCompAbs && fecha <= fechaEndCompAbs) {
-                                    $(".infoviz-tagval").each(function( index ) {
-                                        datasets2[index+$(".infoviz-tagval").length].data.push(register[$(this).data("value")]);
-                                    });
-                                }
-                            }
+                    $(".infoviz-tagval").each(function( index ) {
+                        if ($(this).hasClass("sum_aportat")) {
+                            aportatVis = true;
+                            if ($('.infoviz-comparativa').hasClass("active")) aportatVisComp = true;
+                        } 
+                        else if ($(this).hasClass("sum_suministrat")) {
+                            suministratVis = true;
+                            if ($('.infoviz-comparativa').hasClass("active")) suministratVisComp = true;
                         }
-                        chartData1.datasets = datasets1;
-                        chartData2.datasets = datasets2;
-
-                        // get zoom highlight
-                        var fechaRegisterBegin = new Date(scope.vizdataList[0]['data']),
-                            fechaRegisterEnd = new Date(scope.vizdataList[scope.vizdataList.length-1]['data']);
-
-                        if (fechaBegin < fechaRegisterBegin) 
-                            fechaBegin = fechaRegisterBegin;
-                        if (fechaEnd > fechaRegisterEnd) 
-                            fechaEnd = fechaRegisterEnd;
-
-                        //set zoom highlight
-                        chartData2.xHighlightRange = {
-                          begin: fechaBegin.yyyymmdd(),
-                          end: fechaEnd.yyyymmdd()
+                        else if ($(this).hasClass("sum_rebuig")) {
+                            rebuigVis = true;
+                            if ($('.infoviz-comparativa').hasClass("active")) rebuigVisComp = true;
                         }
+                    });
 
-                        //Initialising chartjs linechart for infoviz
-                        /*var ctx1 = $("#infoviz-linechart1");
-                        var myLineChart1 = new Chart(ctx1, {
-                            type: 'line',
-                            data: chartData1,
-                            options: {
-                                scales: {
-                                    xAxes: [{
-                                        type: "time",
-                                        time: {
-                                            unit: "day",
-                                            unitStepSize: "7",
-                                            //min: new Date("2016-06-01"),
-                                            //max: new Date("2016-07-27"),
-                                            displayFormats: {
-                                                day: "DD-MM-YY"
-                                            }
-                                        }
-                                    }]
-                                }
-                            }
-                        });
+                    if ($(".infoviz-tagval").length > 0) {
+                        $('.export').show();
+                        $('.infoviz-comparativa').show();
+                    } else {
+                        $('.export').hide();
+                        $('.infoviz-comparativa').hide();
+                        $('.infoviz-comparativa').removeClass('active');
+                    }
 
-                        var ctx2 = $("#infoviz-linechart2");
-                        var myLineChart2 = new Chart(ctx2, {
-                            type: 'line',
-                            data: chartData2,
-                            options: {
-                                scales: {
-                                    xAxes: [{
-                                        type: "time",
-                                        time: {
-                                            unit: "week",
-                                            unitStepSize: "4",
-                                            //min: new Date("2016-06-01"),
-                                            //max: new Date("2016-07-27"),
-                                            displayFormats: {
-                                                week: "MM-YY"
-                                            }
-                                        }
-                                    }]
-                                }
-                            }
-                        });*/
+                    if ($(".infoviz-tagval").length > 0 || del) {
+                        var scope = angular.element("#angularAppContainer").scope(),
+                            sc = scope.vizdataList[0]['service_code'],
+                            s1 = sc + ' Suministrado 2015',
+                            s2 = sc + ' Aportado 2015',
+                            s3 = sc + ' Perdido 2015';
 
-                        new Dygraph(
+                        linechart = new Dygraph(
                             document.getElementById("infoviz-linechart"),
                             getCSVDataChart,
                             {
                                 legend: 'follow',
                                 labelsSeparateLines: true,
-                                visibility: [suministratVis, aportatVis, rebuigVis],
+                                //dateWindow:[0,3600],
+                                visibility: [suministratVis, aportatVis, rebuigVis, suministratVisComp, aportatVisComp, rebuigVisComp],
+                                colors: ['#51caef', '#edae1a', '#6bc24c', '#51caef', '#edae1a', '#6bc24c'],
+                                series: {
+                                    '08MDR Suministrado 2015': {
+                                        strokePattern: Dygraph.DASHED_LINE
+                                    },
+                                    '08MDR Aportado 2015': {
+                                        strokePattern: Dygraph.DASHED_LINE
+                                    },
+                                    '08MDR Perdido 2015': {
+                                        strokePattern: Dygraph.DASHED_LINE
+                                    }
+                                },
                                 showRangeSelector: true,
                                 rangeSelectorHeight: 30,
                                 rangeSelectorPlotStrokeColor: 'blue',
@@ -1048,13 +889,43 @@
                             }
                         );
 
-                        //add button Comparativa
-                        $('.export').show();
-                        $('.infoviz-comparativa').show();
-                    } else {
-                        $('.export').hide();
-                        $('.infoviz-comparativa').hide();
-                        $('.infoviz-comparativa').removeClass('active');
+                        linechart.ready(function() {
+                            // set initial zoom
+                            var vis = false;
+                            for (var v in linechart.visibility()) {
+                                if (linechart.visibility()[v]) vis = true;
+                            }
+                            if (vis) {
+
+                                // get data from datepicker
+                                var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
+                                    fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
+                                    fechaBeginAbs = new Date("2016-06-01"),
+                                    fechaEndAbs = new Date("2016-07-28");
+
+                                    //one year before
+                                var fechaBeginComp = $('#infoviz-datepicker1').datepicker("getDate"),
+                                    fechaEndComp = $('#infoviz-datepicker2').datepicker("getDate"),
+                                    fechaBeginCompAbs = new Date("2016-06-01"),
+                                    fechaEndCompAbs = new Date("2016-07-28");
+
+                                fechaBeginComp.setFullYear(fechaBeginComp.getFullYear() - 1),
+                                fechaEndComp.setFullYear(fechaEndComp.getFullYear() - 1),
+                                fechaBeginCompAbs.setFullYear(fechaBeginCompAbs.getFullYear() - 1),
+                                fechaEndCompAbs.setFullYear(fechaEndCompAbs.getFullYear() - 1);
+                                
+                                //console.log("date",fechaBegin,fechaEnd,fechaBegin.valueOf(),fechaEnd.valueOf());
+                                //console.log("comp",fechaBeginComp,fechaEndComp,fechaBeginCompAbs,fechaEndCompAbs);
+
+                                /*var minDate = linechart.xAxisRange()[0];
+                                var maxDate = linechart.xAxisRange()[1];
+                                console.log(minDate,maxDate);*/
+
+                                var w = linechart.xAxisRange();
+                                desired_range = [ fechaBegin.valueOf(), fechaEnd.valueOf() ];
+                                zoom();
+                            }
+                        });
                     }
                 }
 
@@ -1123,6 +994,9 @@
                     $('#infoviz-datepicker2').data({date: onedayago});
                     $('#infoviz-datepicker2').datepicker('update');
 
+                    // load linechart with 1 dataset by default
+                    $("#infoviz-data").val("sum_suministrat").trigger("change");
+
                     return false;
                 });
 
@@ -1167,7 +1041,7 @@
                             $(".closeButton").on("click", function(e){
                                 $(this).parent().remove();
                                 // redraw line chart
-                                loadInfoviz();
+                                loadInfoviz(true);
                             });
                             // draw line chart
                             loadInfoviz();
@@ -1204,10 +1078,11 @@
                     loadInfoviz();
                 });
 
+                /* convert line chart data to CSV for exporting data to Excel */
                 function getCSVData() {
                     var scope = angular.element("#angularAppContainer").scope();
                     var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
-                    var str = '';
+                    var str = 'ID,Código,Date,Suministrado,Aportado,Perdido\r\n';
 
                     for (var i = 0; i < array.length; i++) {
                         var line = '';
@@ -1226,28 +1101,102 @@
                     return encodeURI(str);
                 }
 
+                /* voncert line chart data to CSV for drawing chart */
                 function getCSVDataChart() {
-                    var scope = angular.element("#angularAppContainer").scope();
-                    var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
-                    var sc = array[0]['service_code'];
-                    var str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido'+'\r\n';
+                    //console.log(angular.element("#angularAppContainer").scope().vizdataList);
 
-                    for (var i = 0; i < array.length; i++) {
-                        var line = '';
-                        for (var index in array[i]) {
-                            if (line != '') line += ',';
-                            if (index === 'date') line += array[i][index].replace('-', '');
-                            if (index != 'id' && index != 'service_code') line += array[i][index];
+                    var scope = angular.element("#angularAppContainer").scope(),
+                        array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList,
+                        sc = array[0]['service_code'],
+                        str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido,'+sc+' Suministrado 2015,'+sc+' Aportado 2015,'+sc+' Perdido 2015\r\n',
+                        fuseList = {},
+                        fechaBeginAbs = new Date("2016-01-01"),
+                        fechaEndAbs = new Date("2016-12-31"),
+                        fechaBeginAbsComp = new Date("2015-01-01"),
+                        fechaEndAbsComp = new Date("2015-12-31");
+
+                    //filter
+                    //1. meter datos 2016
+                    for (var el in scope.vizdataList) {
+                        var registro = scope.vizdataList[el];
+                        var data = registro['data'];
+
+                        if (new Date(data) >= fechaBeginAbs && new Date(data) <= fechaEndAbs) {
+                            fuseList[data] = registro;
                         }
+                    }
+
+                    //2. si comparación: añadir datos del 2015
+                    //if ($('.infoviz-comparativa').hasClass("active")) {
+                        for (var el in scope.vizdataList) {
+                            var registro = scope.vizdataList[el];
+                            var data = registro['data'];
+
+                            if (new Date(data) >= fechaBeginAbsComp && new Date(data) <= fechaEndAbsComp) {
+                                data = registro['data'].replace(2015,2016);
+                                //añadir solamente datos comparativos
+                                fuseList[data]['sum_suministrat_2015'] = registro['sum_suministrat'];
+                                fuseList[data]['sum_aportat_2015'] = registro['sum_aportat'];
+                                fuseList[data]['sum_rebuig_2015'] = registro['sum_rebuig'];
+                            }
+                        }                        
+                    //}
+                    //console.log(fuseList);
+
+                    //array = typeof fuseList != 'object' ? JSON.parse(fuseList) : fuseList;
+                    //for (var i = 0; i < array.length; i++) {
+                    for (var dato in fuseList) {
+                        //console.log(dato, fuseList[dato]);
+
+                        var line = dato+",";
+                        line += fuseList[dato]['sum_suministrat']+",";
+                        line += fuseList[dato]['sum_aportat']+",";
+                        line += fuseList[dato]['sum_rebuig']+",";
+
+                        if (fuseList[dato]['sum_suministrat_2015'] !== undefined)
+                            line += fuseList[dato]['sum_suministrat_2015'];
+                        line += ",";
+
+                        if (fuseList[dato]['sum_aportat_2015'] !== undefined)
+                            line += fuseList[dato]['sum_aportat_2015'];
+                        line += ",";
+
+                        if (fuseList[dato]['sum_rebuig_2015'] !== undefined)
+                            line += fuseList[dato]['sum_rebuig_2015'];
 
                         str += line + '\r\n';
                     }
+                    //console.log(str);
 
                     if (str == null) return;
 
                     str = 'data:text/csv;charset=utf-8,' + str;
                     return encodeURI(str);
                 }
+
+                var desired_range = null, animate;
+                function zoom() {
+                    if (!desired_range) return;
+                    // go halfway there
+                    var range = linechart.xAxisRange();
+                    if (Math.abs(desired_range[0] - range[0]) < 60 &&
+                        Math.abs(desired_range[1] - range[1]) < 60) {
+                      linechart.updateOptions({dateWindow: desired_range});
+                      // (do not set another timeout.)
+                    } else {
+                      var new_range;
+                      new_range = [0.5 * (desired_range[0] + range[0]),
+                                   0.5 * (desired_range[1] + range[1])];
+                      linechart.updateOptions({dateWindow: new_range});
+                      //animate();
+                      zoom();
+                    }
+                }
+                
+                animate = function(anim) {
+                    if (anim) setTimeout(zoom, 50);
+                    else zoom();
+                };
             });
 
             Date.prototype.yyyymmdd = function() {
