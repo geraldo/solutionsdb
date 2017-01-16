@@ -867,6 +867,7 @@
                             getCSVDataChart,
                             {
                                 legend: 'follow',
+                                hideOverlayOnMouseOut: false,
                                 labelsSeparateLines: true,
                                 //dateWindow:[0,3600],
                                 visibility: [suministratVis, aportatVis, rebuigVis, suministratVisComp, aportatVisComp, rebuigVisComp],
