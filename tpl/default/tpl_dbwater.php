@@ -625,7 +625,8 @@
                     todayHighlight: true
                 });
                 $('#infoviz-datepicker1').datepicker().on("changeDate", function(e) {
-                    loadInfoviz();
+                    //loadInfoviz();
+                    if (linechart != undefined) setZoom();
                 });
 
                 $('#infoviz-datepicker2').datepicker({
@@ -639,7 +640,8 @@
                     todayHighlight: true
                 });
                 $('#infoviz-datepicker2').datepicker().on("changeDate", function(e) {
-                    loadInfoviz();
+                    //loadInfoviz();
+                    if (linechart != undefined) setZoom();
                 });
                 
                 // Adjust the search window position.
@@ -866,8 +868,8 @@
                             document.getElementById("infoviz-linechart"),
                             getCSVDataChart,
                             {
-                                legend: 'follow',
-                                hideOverlayOnMouseOut: false,
+                                legend: 'always',
+                                //hideOverlayOnMouseOut: false,
                                 labelsSeparateLines: true,
                                 //dateWindow:[0,3600],
                                 visibility: [suministratVis, aportatVis, rebuigVis, suministratVisComp, aportatVisComp, rebuigVisComp],
@@ -898,36 +900,55 @@
                             }
                             if (vis) {
 
-                                // get data from datepicker
-                                var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
-                                    fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
-                                    fechaBeginAbs = new Date("2016-06-01"),
-                                    fechaEndAbs = new Date("2016-07-28");
+                                setZoom();
 
-                                    //one year before
-                                var fechaBeginComp = $('#infoviz-datepicker1').datepicker("getDate"),
-                                    fechaEndComp = $('#infoviz-datepicker2').datepicker("getDate"),
-                                    fechaBeginCompAbs = new Date("2016-06-01"),
-                                    fechaEndCompAbs = new Date("2016-07-28");
+                                //linechart._setupRangeMouseHandling();
 
-                                fechaBeginComp.setFullYear(fechaBeginComp.getFullYear() - 1),
-                                fechaEndComp.setFullYear(fechaEndComp.getFullYear() - 1),
-                                fechaBeginCompAbs.setFullYear(fechaBeginCompAbs.getFullYear() - 1),
-                                fechaEndCompAbs.setFullYear(fechaEndCompAbs.getFullYear() - 1);
-                                
-                                //console.log("date",fechaBegin,fechaEnd,fechaBegin.valueOf(),fechaEnd.valueOf());
-                                //console.log("comp",fechaBeginComp,fechaEndComp,fechaBeginCompAbs,fechaEndCompAbs);
+                                xrange = linechart.xAxisRange(); 
 
-                                /*var minDate = linechart.xAxisRange()[0];
-                                var maxDate = linechart.xAxisRange()[1];
-                                console.log(minDate,maxDate);*/
-
-                                var w = linechart.xAxisRange();
-                                desired_range = [ fechaBegin.valueOf(), fechaEnd.valueOf() ];
-                                zoom();
+                                $("#infoviz-linechart").mouseup(function(e) {
+                                    var xr = linechart.xAxisRange();
+                                    if (xrange[0] !== xr[0] || xrange[1] !== xr[1]) {
+                                        var date1 = new Date(xr[0]);
+                                        var date2 = new Date(xr[1]);
+                                        //console.log("range changed!!! new value: " + date1 + " to " + date2);
+                                        $('#infoviz-datepicker1').datepicker('setDate', new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()));
+                                        $('#infoviz-datepicker2').datepicker('setDate', new Date(date2.getFullYear(), date2.getMonth(), date2.getDate()));
+                                    }
+                                }).mouseleave(function(e) {
+                                    var xr = linechart.xAxisRange(); 
+                                    if (xrange[0] !== xr[0] || xrange[1] !== xr[1]) {
+                                        var date1 = new Date(xr[0]);
+                                        var date2 = new Date(xr[1]);
+                                        //console.log("range changed!!! new value: " + date1 + " to " + date2);
+                                        $('#infoviz-datepicker1').datepicker('setDate', new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()));
+                                        $('#infoviz-datepicker2').datepicker('setDate', new Date(date2.getFullYear(), date2.getMonth(), date2.getDate()));
+                                    }
+                                });
                             }
                         });
                     }
+                }
+
+                function setZoom() {
+                    // get data from datepicker
+                    var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
+                        fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
+                        fechaBeginAbs = new Date("2016-06-01"),
+                        fechaEndAbs = new Date("2016-07-28");
+
+                    //console.log("date",fechaBegin,fechaEnd,fechaBegin.valueOf(),fechaEnd.valueOf());
+
+                    var w = linechart.xAxisRange();
+                    desired_range = [ fechaBegin.valueOf(), fechaEnd.valueOf() ];
+                    zoom();
+                }
+
+                function syncDatepicker(date1, date2) {
+                    $('#infoviz-datepicker1').data({date: date1});
+                    $('#infoviz-datepicker1').datepicker('update');
+                    $('#infoviz-datepicker2').data({date: date2});
+                    $('#infoviz-datepicker2').datepicker('update');
                 }
 
                 // Toggle the search window when the menu icon is pressed
@@ -1198,6 +1219,56 @@
                     if (anim) setTimeout(zoom, 50);
                     else zoom();
                 };
+
+
+                /**
+                * https://github.com/kaliatech/dygraphs-dynamiczooming-example/blob/master/j/JGS.Demo1Page.js
+                * Internal method to add mouse down listener to dygraphs range selector.  Coded so that it can be called
+                * multiple times without concern. Although not necessary for simple example (like example1), this becomes necessary
+                * for more advanced examples when the graph must be recreated, not just updated.
+                */
+                /*Dygraph.prototype._setupRangeMouseHandling = function () {
+                    var self = this;
+
+                    // Element used for tracking mouse up events
+                    this.$mouseUpEventEl = $(window);
+                    if ($.support.cssFloat == false) { //IE<=8, doesn't support mouse events on window
+                      this.$mouseUpEventEl = $(document.body);
+                    }
+
+                    //Minor Hack...not sure how else to hook-in to dygraphs range selector events without modifying source. This is
+                    //where minor modification to dygraphs (range selector plugin) might make for a cleaner approach.
+                    //We only want to install a mouse up handler if mouse down interaction is started on the range control
+                    var $rangeEl = this.$graphCont.find('.dygraph-rangesel-fgcanvas, .dygraph-rangesel-zoomhandle');
+
+                    //Uninstall existing handler if already installed
+                    $rangeEl.off("mousedown.jgs touchstart.jgs");
+
+                    //Install new mouse down handler
+                    $rangeEl.on("mousedown.jgs touchstart.jgs", function (evt) {
+
+                      //Track that mouse is down on range selector
+                      self.isRangeSelectorActive = true;
+
+                      // Setup mouse up handler to initiate new data load
+                      self.$mouseUpEventEl.off("mouseup.jgs touchend.jgs"); //cancel any existing
+                      $(self.$mouseUpEventEl).on('mouseup.jgs touchend.jgs', function (evt) {
+                        self.$mouseUpEventEl.off("mouseup.jgs touchend.jgs");
+
+                        //Mouse no longer down on range selector
+                        self.isRangeSelectorActive = false;
+
+                        //Get the new detail window extents
+                        var graphAxisX = self.graph.xAxisRange();
+                        self.detailStartDateTm = new Date(graphAxisX[0]);
+                        self.detailEndDateTm = new Date(graphAxisX[1]);
+
+                        // syncronize with date handler
+                        console.log(self.detailStartDateTm, self.detailEndDateTm);
+                      });
+                    });
+                };*/
+
             });
 
             Date.prototype.yyyymmdd = function() {
