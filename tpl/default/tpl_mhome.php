@@ -3,6 +3,14 @@
 	
 	<div class="container">
 		<div class="row">
+			<div class="col-xs-12 panel-top">
+				<div class="row">
+					<h1>CUADRO DE MANDO – GESTIÓN DEL SERVICIO</h1>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
 			<div class="col-xs-12 panel-home">
 				<div class="row">
 					<div class="col-xs-6 col-md-4">
