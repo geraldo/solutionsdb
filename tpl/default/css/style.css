@@ -102,8 +102,8 @@ body{
 
 
 .panel-home{
-	margin-top: 15%;
-	margin-bottom: 15%;
+	margin-top: 5%;
+	margin-bottom: 10%;
 	background: rgba(255,255,255,0.8);
 	border-radius: 10px;
 }
@@ -120,11 +120,23 @@ body{
 	margin: 0px;
 	padding: 0px;
 }
-.panel-home a p strong{
+.panel-home a p strong {
 	color: #6E869C;
 	font-size: 30px;
 }
 
+.panel-top {
+    margin-top: 10%;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+}
+
+.panel-top h1 {
+	color: #6E869C;
+	font-size: 30px;
+	text-align: center;
+	font-weight: bold;
+}
 
 
 .panel-home a:hover{
