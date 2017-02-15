@@ -51,7 +51,7 @@
 						<?php
 						if($dbconsumer){	
 						?>
-							<a href="<?php echo $baseHref?>dbconsumer">
+							<a href="<?php echo $baseHref?>dbconsumer/index">
 						<?php
 						}else{
 						?>
