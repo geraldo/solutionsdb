@@ -41,6 +41,14 @@ class ControllerIndex{
 				$finalDate    	= (empty($_POST['finalDate'])) 		? null 	: $this->_system->nohacker($_POST['finalDate']);
 				$town			= $places->dbWaterTownInfo($id_town,$town_name,$service_code,$initialDate,$finalDate);
 				echo json_encode($town); 
+			}else if($what==="DBWATER_SECTOR_INFO"){
+				$id_town     	= (empty($_POST['id'])) 			? 0 	: $this->_system->nohacker($_POST['id']);
+				$service_code  	= (empty($_POST['service_code'])) 	? 0 	: $this->_system->nohacker($_POST['service_code']);
+				$town_name      = (empty($_POST['town_name'])) 		? null 	: $this->_system->nohacker($_POST['town_name']);
+				$initialDate    = (empty($_POST['initialDate'])) 	? null 	: $this->_system->nohacker($_POST['initialDate']);
+				$finalDate    	= (empty($_POST['finalDate'])) 		? null 	: $this->_system->nohacker($_POST['finalDate']);
+				$town			= $places->dbWaterTownInfo($id_town,$town_name,$service_code,$initialDate,$finalDate);
+				echo json_encode($town); 
 			}else if($what==="UPDATE_TOWN"){
 				if((int)$_SESSION['update']===1){
 					$id_town    			= (empty($_POST['id_town'])) 				? null : $this->_system->nohacker($_POST['id_town']);
