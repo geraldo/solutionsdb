@@ -743,7 +743,7 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 				$distributed[] = round($row['distributed']);
 				$wasted[] = round($row['wasted']);
 			}
-			$item['volumenes7days'] = array($distributed,$supplied,$wasted);
+			$item['volumenes7days'] = array($supplied,$distributed,$wasted);
 		}
 
 		//volume
