@@ -147,28 +147,6 @@
 			vars2send.token			= token;
 			return $http.post(baseHref+'ajax.places.php', vars2send);
 		}
-
-		dataFactory.dbWaterTest	= function(id,service_code,initialDate,finalDate){
-			var vars2send 			= {};
-			vars2send.id			= id;
-			vars2send.service_code	= service_code;
-			vars2send.what			= "DBWATER_TEST";
-			vars2send.initialDate	= initialDate;
-			vars2send.finalDate		= finalDate;
-			vars2send.token			= token;
-			return $http.post(baseHref+'ajax.test.php', vars2send);
-		}
-
-		dataFactory.dbWaterGetSector	= function(id,service_code,initialDate,finalDate){
-			var vars2send 			= {};
-			vars2send.id			= id;
-			vars2send.service_code	= service_code;
-			vars2send.what			= "DBWATER_SECTOR_INFO";
-			vars2send.initialDate	= initialDate;
-			vars2send.finalDate		= finalDate;
-			vars2send.token			= token;
-			return $http.post(baseHref+'ajax.places.php', vars2send);
-		}
 		
 		return dataFactory;		
 	}])

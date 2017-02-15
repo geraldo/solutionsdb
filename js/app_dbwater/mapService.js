@@ -119,6 +119,10 @@ function map_service($http,$rootScope){
     
 		map.on('click', function(evt) {
 			//log("click coordinates: "+evt.coordinate);
+			$("#townInfoPanel").hide();
+			$(".expedient").hide();
+			$("#sectorInfoPanel").hide();
+
 			/*if (activeLayer == renderedLayers["Sectores"]) {
 				selectSector(evt.coordinate);
 			} else {
