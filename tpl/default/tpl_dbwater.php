@@ -198,8 +198,8 @@
                             <img src="tpl/default/img/dbwater/ic-water.jpg" class="icon" />
                         </div>
                         <ul class="list-unstyled list-left-bordered">
-                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
                             <li>Volumen suministrado <span class="pull-right custom-badge">{{valueSupplied}}</span></li>
+                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
                             <li>Volumen de pérdida <span class="pull-right custom-badge">{{valueLoses}}</span></li>
                             <li>Caudal medio <span class="pull-right custom-badge">{{valueAvgFlow}}</span></li>
                             <li>Caudal mínimo nocturno <span class="pull-right custom-badge">{{valueNightFlow}}</span></li>
@@ -276,8 +276,8 @@
                             <img src="tpl/default/img/dbwater/ic-water.jpg" class="icon" />
                         </div>
                         <ul class="list-unstyled list-left-bordered">
-                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
                             <li>Volumen suministrado <span class="pull-right custom-badge">{{valueSupplied}}</span></li>
+                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
                             <li>Volumen de pérdida <span class="pull-right custom-badge">{{valueLoses}}</span></li>
                             <li>Caudal medio <span class="pull-right custom-badge">{{valueAvgFlow}}</span></li>
                             <li>Caudal mínimo nocturno <span class="pull-right custom-badge">{{valueNightFlow}}</span></li>
