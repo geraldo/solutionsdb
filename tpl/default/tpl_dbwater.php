@@ -938,10 +938,10 @@
 
                     if ($(".infoviz-tagval").length > 0 || del) {
                         var scope = angular.element("#angularAppContainer").scope(),
-                            sc = scope.vizdataList[0]['service_code'],
-                            s1 = sc + ' Suministrado 2015',
-                            s2 = sc + ' Aportado 2015',
-                            s3 = sc + ' Perdido 2015';
+                            sc = '08MDR',
+                            s1 = sc + ' Suministrado 2017',
+                            s2 = sc + ' Aportado 2017',
+                            s3 = sc + ' Perdido 2017';
 
                         linechart = new Dygraph(
                             document.getElementById("infoviz-linechart"),
@@ -954,13 +954,13 @@
                                 visibility: [suministratVis, aportatVis, rebuigVis, suministratVisComp, aportatVisComp, rebuigVisComp],
                                 colors: ['#51caef', '#edae1a', '#6bc24c', '#51caef', '#edae1a', '#6bc24c'],
                                 series: {
-                                    '08MDR Suministrado 2015': {
+                                    '08MDR Suministrado 2017': {
                                         strokePattern: Dygraph.DASHED_LINE
                                     },
-                                    '08MDR Aportado 2015': {
+                                    '08MDR Aportado 2017': {
                                         strokePattern: Dygraph.DASHED_LINE
                                     },
-                                    '08MDR Perdido 2015': {
+                                    '08MDR Perdido 2017': {
                                         strokePattern: Dygraph.DASHED_LINE
                                     }
                                 },
@@ -1013,8 +1013,8 @@
                     // get data from datepicker
                     var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
                         fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
-                        fechaBeginAbs = new Date("2016-06-01"),
-                        fechaEndAbs = new Date("2016-07-28");
+                        fechaBeginAbs = new Date("2017-02-07"),
+                        fechaEndAbs = new Date("2017-02-14");
 
                     //console.log("date",fechaBegin,fechaEnd,fechaBegin.valueOf(),fechaEnd.valueOf());
 
@@ -1086,8 +1086,8 @@
                     onedayago.setDate(onedayago.getDate() - 1);
 
                     // temporalmente lo ponemos a junio- julio ya que son los meses donde tenemos datos               
-                    onemonthago = new Date("2016-06-01");
-                    onedayago = new Date("2016-07-28");
+                    onemonthago = new Date("2017-02-07");
+                    onedayago = new Date("2017-02-14");
                     /////////////
 
                     $('#infoviz-datepicker1').data({date: onemonthago});
@@ -1183,7 +1183,7 @@
                 function getCSVData() {
                     var scope = angular.element("#angularAppContainer").scope();
                     var array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList;
-                    var str = 'ID,Código,Date,Suministrado,Aportado,Perdido\r\n';
+                    var str = 'Date,Suministrado,Aportado,Perdido\r\n';
 
                     for (var i = 0; i < array.length; i++) {
                         var line = '';
@@ -1208,11 +1208,11 @@
 
                     var scope = angular.element("#angularAppContainer").scope(),
                         array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList,
-                        sc = array[0]['service_code'],
+                        sc = '08MDR',
                         str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido,'+sc+' Suministrado 2015,'+sc+' Aportado 2015,'+sc+' Perdido 2015\r\n',
                         fuseList = {},
-                        fechaBeginAbs = new Date("2016-01-01"),
-                        fechaEndAbs = new Date("2016-12-31"),
+                        fechaBeginAbs = new Date("2017-01-01"),
+                        fechaEndAbs = new Date("2017-12-31"),
                         fechaBeginAbsComp = new Date("2015-01-01"),
                         fechaEndAbsComp = new Date("2015-12-31");
 
@@ -1242,7 +1242,7 @@
                             }
                         }                        
                     //}
-                    //console.log(fuseList);
+                    console.log(fuseList);
 
                     //array = typeof fuseList != 'object' ? JSON.parse(fuseList) : fuseList;
                     //for (var i = 0; i < array.length; i++) {

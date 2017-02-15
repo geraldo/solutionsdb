@@ -30,7 +30,7 @@ class Vizdata {
 		return $retorno;		
 	}
 
-	public function dbWaterListVolumenes($data){
+	public function dbWaterListVolumenesXXX($data){
 		$query 		= "SELECT * FROM carto.service_diari ORDER BY data ASC";
 		$rs 		= $this->_system->pdo_select("bd1",$query);
 		$retorno	= array();
@@ -50,6 +50,23 @@ class Vizdata {
 		return array("status"=>"Accepted","message"=>$retorno,"total"=>count($rs),"code"=>200);
 	}
 
-}
+	public function dbWaterListVolumenes($data){
+			$query 		= "SELECT * FROM web_results.service_volume_days('08MDR',8)";
+			$rs 		= $this->_system->pdo_select("bd1",$query);
+			$retorno	= array();
+			if(count($rs)>0){
+				foreach($rs as $row){
+					$item = array(
+						"data"				=> $row['day'],
+						"sum_suministrat"	=> $row['supplied'],
+						"sum_aportat"		=> $row['distributed'],
+						"sum_rebuig"		=> $row['wasted']
+					);
+					array_push($retorno, $item);
+				}
+			}
+			return array("status"=>"Accepted","message"=>$retorno,"total"=>count($rs),"code"=>200);
+		}
+	}
 
 ?>
