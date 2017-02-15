@@ -164,7 +164,7 @@
 									human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
 									text-renderer="textRenderer">									
 								</div>
-                           	<p class="title">Diario</p>
+                           	<p class="title">Alta</p>
                         </div>
                         <div class="col-xs-6" align="center">
                             	<div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
@@ -186,7 +186,7 @@
 									human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
 									text-renderer="textRenderer">									
 								</div>
-                            <p class="title">Mensual</p>
+                            <p class="title">Baja</p>
                         </div>
                     </div>
                     <h3>Tendéncia del rendimiento</h3>
