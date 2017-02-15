@@ -212,7 +212,85 @@
                     <a href="#" class="btn btn-sm btn-primary open-expedient">Ficha</a> Ver ficha completa
                 </div>
             </div>
-            
+
+            <div class="window right-side ng-cloak" ng-cloak ng-show="sectorInfoPanel" id="sectorInfoPanel">
+                <h2>
+                    {{sectorName}}
+                    <a href="#" class="pull-right"><i class="fa fa-fw fa-times"></i></a>
+                </h2>
+                <div class="content">
+                    <h3>Rendimiento</h3>
+                   
+                    <div class="row list-of-donuts">
+                        <div class="col-xs-6" align="center">
+                            <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
+                                    value="{{valueHigh}}" value-font-color="{{valueFontColor}}"
+                                    width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
+                                    value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
+                                    label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
+                                    maxLabelMinFontSize="{{maxLabelMinFontSize}}"
+                                    min="{{min}}" max="{{max}}"
+                                    hide-min-max="{{hideMinMax}}" hide-value="{{hideValue}}" hide-inner-shadow="{{hideInnerShadow}}"
+                                    gauge-width-scale="{{gaugeWidthScale}}" gauge-color="{{gaugeColor}}"
+                                    show-inner-shadow="{{showInnerShadow}}" shadow-opacity="{{shadowOpacity}}"
+                                    shadow-size="{{shadowSize}}" shadow-vertical-offset="{{shadowVerticalOffset}}"
+                                    level-colors="{{levelColors}}" custom-sectors="{{customSectors}}" no-gradient="{{noGradient}}"
+                                    start-animation-time="{{startAnimationTime}}" start-animation-type="{{startAnimationType}}"
+                                    refresh-animation-time="{{refreshAnimationTime}}" refresh-animation-type="{{refreshAnimationType}}"
+                                    donut="{{donut}}" donut-start-angle="{{donutStartAngle}}"
+                                    counter="{{counter}}" decimals="{{decimals}}" symbol="{{symbol}}" format-number="{{formatNumber}}"
+                                    human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
+                                    text-renderer="textRenderer">                                   
+                                </div>
+                            <p class="title">Alta</p>
+                        </div>
+                        <div class="col-xs-6" align="center">
+                                <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
+                                    value="{{valueLow}}" value-font-color="{{valueFontColor}}"
+                                    width="{{width}}" height="{{height}}" relative-gauge-size="{{relativeGaugeSize}}"
+                                    value-min-font-size="{{valueMinFontSize}}" title-min-font-size="{{titleMinFontSize}}"
+                                    label-min-font-size="{{labelMinFontSize}}" min-label-min-font-size="{{minLabelMinFontSize}}"
+                                    maxLabelMinFontSize="{{maxLabelMinFontSize}}"
+                                    min="{{min}}" max="{{max}}"
+                                    hide-min-max="{{hideMinMax}}" hide-value="{{hideValue}}" hide-inner-shadow="{{hideInnerShadow}}"
+                                    gauge-width-scale="{{gaugeWidthScale}}" gauge-color="{{gaugeColor}}"
+                                    show-inner-shadow="{{showInnerShadow}}" shadow-opacity="{{shadowOpacity}}"
+                                    shadow-size="{{shadowSize}}" shadow-vertical-offset="{{shadowVerticalOffset}}"
+                                    level-colors="{{levelColors}}" custom-sectors="{{customSectors}}" no-gradient="{{noGradient}}"
+                                    start-animation-time="{{startAnimationTime}}" start-animation-type="{{startAnimationType}}"
+                                    refresh-animation-time="{{refreshAnimationTime}}" refresh-animation-type="{{refreshAnimationType}}"
+                                    donut="{{donut}}" donut-start-angle="{{donutStartAngle}}"
+                                    counter="{{counter}}" decimals="{{decimals}}" symbol="{{symbol}}" format-number="{{formatNumber}}"
+                                    human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
+                                    text-renderer="textRenderer">                                   
+                                </div>
+                            <p class="title">Baja</p>
+                        </div>
+                    </div>
+                    <h3>Tendéncia del rendimiento</h3>
+                    <canvas id="fitxa-barchart" height="120" class="chart chart-bar" chart-data="data_fitxa_rend" chart-labels="labels_fitxa_rend" chart-series="series_fitxa_rend" chart-options="options_fitxa_rend"></canvas>
+                    <h3>Información</h3>
+                    <div class="list-with-icon">
+                        <div class="icon-container">
+                            
+                            <img src="tpl/default/img/dbwater/ic-water.jpg" class="icon" />
+                        </div>
+                        <ul class="list-unstyled list-left-bordered">
+                            <li>Volumen aportado <span class="pull-right custom-badge">{{valueDistributed}}</span></li>
+                            <li>Volumen suministrado <span class="pull-right custom-badge">{{valueSupplied}}</span></li>
+                            <li>Volumen de pérdida <span class="pull-right custom-badge">{{valueLoses}}</span></li>
+                            <li>Caudal medio <span class="pull-right custom-badge">{{valueAvgFlow}}</span></li>
+                            <li>Caudal mínimo nocturno <span class="pull-right custom-badge">{{valueNightFlow}}</span></li>
+                            <li>€ por m³ <span class="pull-right custom-badge">{{valueVolumePrice}}</span></li>
+                        </ul>
+                    </div>
+                    <h3>Volumenes</h3>
+                    <canvas id="fitxa-linechart" height="150" class="chart chart-line" chart-data="data_fitxa_vol" chart-labels="labels_fitxa_vol" chart-series="series_fitxa_vol" chart-options="options_fitxa_vol" chart-dataset override="datasetOverride"></canvas> 
+                    <hr />
+                    <a href="#" class="btn btn-sm btn-primary open-expedient">Ficha</a> Ver ficha completa
+                </div>
+            </div>
+
             <div class="window search">
                 <form>
                     <label>Municipio <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i></label>
