@@ -513,10 +513,12 @@ div.table-list ul li.shoe .custom-badge {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-#townInfoPanel .content {
+#townInfoPanel .content,
+#sectorInfoPanel .content {
   padding: 0 10px;
 }
-#townInfoPanel .content .row {
+#townInfoPanel .content .row,
+#sectorInfoPanel .content .row {
   margin-left: 0;
   margin-right: 0;
 }
