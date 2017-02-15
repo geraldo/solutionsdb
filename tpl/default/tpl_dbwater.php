@@ -693,7 +693,7 @@
                 //Initialising datepicker for infoviz
                 $('#infoviz-datepicker1').datepicker({
                     format: "dd/mm/yyyy",
-                    startDate: "01/01/2015",
+                    startDate: "01/01/2016",
                     endDate: "0d",
                     language: "es",
                     multidate: false,
@@ -709,7 +709,7 @@
 
                 $('#infoviz-datepicker2').datepicker({
                     format: "dd/mm/yyyy",
-                    startDate: "01/01/2015",
+                    startDate: "01/01/2016",
                     endDate: "0d",
                     language: "es",
                     multidate: false,
@@ -1209,12 +1209,12 @@
                     var scope = angular.element("#angularAppContainer").scope(),
                         array = typeof scope.vizdataList != 'object' ? JSON.parse(scope.vizdataList) : scope.vizdataList,
                         sc = '08MDR',
-                        str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido,'+sc+' Suministrado 2015,'+sc+' Aportado 2015,'+sc+' Perdido 2015\r\n',
+                        str = 'Date,'+sc+' Suministrado,'+sc+' Aportado,'+sc+' Perdido,'+sc+' Suministrado 2016,'+sc+' Aportado 2016,'+sc+' Perdido 2016\r\n',
                         fuseList = {},
                         fechaBeginAbs = new Date("2017-01-01"),
                         fechaEndAbs = new Date("2017-12-31"),
-                        fechaBeginAbsComp = new Date("2015-01-01"),
-                        fechaEndAbsComp = new Date("2015-12-31");
+                        fechaBeginAbsComp = new Date("2016-01-01"),
+                        fechaEndAbsComp = new Date("2016-12-31");
 
                     //filter
                     //1. meter datos 2016
@@ -1227,18 +1227,18 @@
                         }
                     }
 
-                    //2. si comparación: añadir datos del 2015
+                    //2. si comparación: añadir datos del 2016
                     //if ($('.infoviz-comparativa').hasClass("active")) {
                         for (var el in scope.vizdataList) {
                             var registro = scope.vizdataList[el];
                             var data = registro['data'];
 
                             if (new Date(data) >= fechaBeginAbsComp && new Date(data) <= fechaEndAbsComp) {
-                                data = registro['data'].replace(2015,2016);
+                                data = registro['data'].replace(2016,2017);
                                 //añadir solamente datos comparativos
-                                fuseList[data]['sum_suministrat_2015'] = registro['sum_suministrat'];
-                                fuseList[data]['sum_aportat_2015'] = registro['sum_aportat'];
-                                fuseList[data]['sum_rebuig_2015'] = registro['sum_rebuig'];
+                                fuseList[data]['sum_suministrat_2016'] = registro['sum_suministrat'];
+                                fuseList[data]['sum_aportat_2016'] = registro['sum_aportat'];
+                                fuseList[data]['sum_rebuig_2016'] = registro['sum_rebuig'];
                             }
                         }                        
                     //}
@@ -1254,16 +1254,16 @@
                         line += fuseList[dato]['sum_aportat']+",";
                         line += fuseList[dato]['sum_rebuig']+",";
 
-                        if (fuseList[dato]['sum_suministrat_2015'] !== undefined)
-                            line += fuseList[dato]['sum_suministrat_2015'];
+                        if (fuseList[dato]['sum_suministrat_2016'] !== undefined)
+                            line += fuseList[dato]['sum_suministrat_2016'];
                         line += ",";
 
-                        if (fuseList[dato]['sum_aportat_2015'] !== undefined)
-                            line += fuseList[dato]['sum_aportat_2015'];
+                        if (fuseList[dato]['sum_aportat_2016'] !== undefined)
+                            line += fuseList[dato]['sum_aportat_2016'];
                         line += ",";
 
-                        if (fuseList[dato]['sum_rebuig_2015'] !== undefined)
-                            line += fuseList[dato]['sum_rebuig_2015'];
+                        if (fuseList[dato]['sum_rebuig_2016'] !== undefined)
+                            line += fuseList[dato]['sum_rebuig_2016'];
 
                         str += line + '\r\n';
                     }
