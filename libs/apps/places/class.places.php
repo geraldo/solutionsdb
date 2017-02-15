@@ -507,9 +507,9 @@ FROM carto.municipios as a LEFT JOIN carto.concesion as b ON a.cmun5_ine=b.cmun5
 		$retorno	= array();
 		if(count($rs)>0){
 			foreach($rs as $row){
-				/*echo "<pre>";
+				echo "<pre>";
 				print_r($row);
-				echo "</pre>";*/
+				echo "</pre>";
 				$item 	= array(
 						"cpro_dgc"			=> $row['cpro_dgc'],
 						"cmun5_ine"			=> $row['cmun5_ine'],
@@ -624,7 +624,7 @@ FROM carto.municipios as a LEFT JOIN carto.concesion as b ON a.cmun5_ine=b.cmun5
 	//**********************************************************************************************************
 	//**********************************************************************************************************
 	
-	function dbWaterTownInfo($cmuni5_dgc,$town_name,$service_code,$initialDate,$finalDate){
+	public function dbWaterTownInfo($cmuni5_dgc,$town_name,$service_code,$initialDate,$finalDate){
 		$query = "SELECT AVG(service_diari.rt_alta)
 FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_service = carto.service_diari.service_code ";
 		
@@ -689,7 +689,7 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 		$rs 		= $this->_system->pdo_select("bd1",$queryCaudalMedio);
 		if(count($rs)>0){
 			$item['sum_aportat']	= number_format($rs[0]['sum_aportat']*100,0);
-		}		
+		}
 
 		/**************/
 
@@ -700,9 +700,9 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 
 			$row = $rs[0];
 			$record	= array(
-						"high"		=> $row['high_performance'],
-						"low"		=> $row['theoric_low_performance'],
-						"global"	=> $row['theoric_global_performance']
+						"high"		=> round($row['high_performance'])/100,
+						"low"		=> round($row['theoric_low_performance'])/100,
+						"global"	=> round($row['theoric_global_performance'])/100
 			);
 			$item['performance'] = $record;
 		}
@@ -715,7 +715,7 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 			$record	= array(
 						"supplied"		=> $row['supplied'],
 						"distributed"	=> $row['distributed'],
-						"loses"			=> $row['loses'],
+						"loses"			=> $row['lost'],
 						"avg_flow"		=> $row['avg_flow'],
 						"night_flow"	=> $row['night_flow'],
 						"volume_price"	=> $row['volume_price']
@@ -750,8 +750,5 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 	//*****************************           END  dbWater PERFORMANCE            ******************************
 	//**********************************************************************************************************
 	//**********************************************************************************************************
-
-
-
 }
 ?>

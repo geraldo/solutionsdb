@@ -95,7 +95,7 @@ function map_service($http,$rootScope){
 		setActiveLayer(layers[1]);
 		renderWMSqgis(layers[2]); 
 		renderWMSqgis(layers[3]); 
-		renderWMSqgis(layers[4]); 
+		renderWMSqgis(layers[4]);
 		
 		//WMS Layer - Provincias
 		//renderWMS(layers[0],layersStyle[0]);
@@ -119,6 +119,11 @@ function map_service($http,$rootScope){
     
 		map.on('click', function(evt) {
 			//log("click coordinates: "+evt.coordinate);
+			/*if (activeLayer == renderedLayers["Sectores"]) {
+				selectSector(evt.coordinate);
+			} else {
+				selectTown(evt.coordinate);
+			}*/
 			selectTown(evt.coordinate);
 		});
 
@@ -133,13 +138,13 @@ function map_service($http,$rootScope){
     	map.on('moveend', function(evt){
 	    	var newZoomLevel = map.getView().getZoom();
 	    	if (newZoomLevel != currentZoomLevel){
-		      currentZoomLevel = newZoomLevel;
-		      //log("newZoomLevel: "+newZoomLevel);
-		      if(currentZoomLevel>=zoomTrigger){
-			      setActiveLayer(layers[2]);
-		      }else{
-			      setActiveLayer(layers[1]);
-		      }
+		      	currentZoomLevel = newZoomLevel;
+
+				/*if(currentZoomLevel>=zoomTrigger){
+					setActiveLayer(layers[3]);
+				}else{
+					setActiveLayer(layers[1]);
+				}*/
 
 		    }
 	    });
@@ -252,13 +257,13 @@ function map_service($http,$rootScope){
 											{'INFO_FORMAT': 'application/json'}
 			);
 			if (url) {
-			   log("url",url);
+			   	log("url",url);
 			    var parser = new ol.format.GeoJSON();
 			    $http.get(url+"&feature_count=100").success(function(response){
-				   var result = parser.readFeatures(response);
-				   if(result.length>0){
+				   	var result = parser.readFeatures(response);
+				   	if(result.length>0){
 						//AQUALIA towns can be indentified					  
-					  if(result[0].G.sub_aqp==="AQUALIA"){
+					  	if(result[0].G.sub_aqp==="AQUALIA"){
 						   //************** Highlight town
 						   var feature = new ol.Feature(result[0].G.geometry);
 						   feature.setStyle(highLightStyle);
@@ -305,6 +310,8 @@ function map_service($http,$rootScope){
 							$xml = $(xmlDoc);
 					var sub_aqp = $xml.find('Attribute[name="sub_aqp"]').attr('value');
 
+					console.log(currentZoomLevel, zoomTrigger);
+
 					//AQUALIA towns can be indentified	
 					if (sub_aqp === "AQUALIA") {
 						var nmun_cc = $xml.find('Attribute[name="nmun_cc"]').attr('value');
@@ -312,18 +319,29 @@ function map_service($http,$rootScope){
 
 					    var returnData = getJson($xml);
 
-				        //Highlight town
-						highLightSource = new ol.source.Vector({
-						  features: (new ol.format.GeoJSON()).readFeatures(returnData.geometry)
-						});
-						highLightLayer = new ol.layer.Vector({
-						  source: highLightSource,
-						  style: highLightStyle
-						});
-						map.addLayer(highLightLayer);
+					    //municipio o sector?
+					    if (currentZoomLevel<zoomTrigger) {
+					    	//municipio
 
-					    //Broadcast event for data rendering
-					    $rootScope.$broadcast('featureInfoReceived',returnData);
+					        //Highlight town
+							highLightSource = new ol.source.Vector({
+							  features: (new ol.format.GeoJSON()).readFeatures(returnData.geometry)
+							});
+							highLightLayer = new ol.layer.Vector({
+							  source: highLightSource,
+							  style: highLightStyle
+							});
+							map.addLayer(highLightLayer);
+
+						    //Broadcast event for data rendering
+						    $rootScope.$broadcast('featureInfoReceived',returnData);
+					    } else {
+					    	//sector
+					    	log("SECTOR SELECTED");
+
+						    //Broadcast event for data rendering
+					    	$rootScope.$broadcast('featureSectorInfoReceived',returnData);
+					    }
 				        
 				    } else {
 				    	log("selectTown sub_aqp not AQUALIA: "+sub_aqp);
