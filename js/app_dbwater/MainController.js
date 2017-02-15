@@ -43,7 +43,7 @@ Controller.$inject = [
 			layers 							= Array('Provincias','Municipios rendimiento','Municipios otros','Sectores','Parcelas'),		//layers contained in dbwater_rend
 			layersForIndentification 		= Array('Municipios','Sector'),		//layers that can be identified
 			layersStyle 					= Array('provincias_v6','munis_rendimiento_v1','sector_rendimiento_v1','parceles_v1'),	//old geoserver!
-			zoomTrigger 					= 13,								//zoom level for trigger active layer change
+			zoomTrigger 					= 14,								//zoom level for trigger active layer change
 			version							= "1.0.0";
 			//$('#info').hide();
 		$scope.initApp	= function(_baseHref,_urlWMS,_environment,_token,_isMobile){
@@ -329,7 +329,7 @@ Controller.$inject = [
 			log("featureSectorInfoReceived",data);
 			$scope.sectorName = data.nmun_aq;
 			if (data.nmun_aq.length > 25) $scope.sectorName = data.nmun_aq.substring(0,22)+"...";
-			$scope.sectorName = "Sector 99";
+			$scope.sectorName = "Sector 20";
 			$scope.valueDay				= 0;
 			$scope.valueWeek			= 0;
 			$scope.valueMonth			= 0;
