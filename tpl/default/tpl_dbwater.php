@@ -164,7 +164,7 @@
 									human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
 									text-renderer="textRenderer">									
 								</div>
-                           	<p class="title">Alta</p>
+                           	<p class="title">Diario</p>
                         </div>
                         <div class="col-xs-6" align="center">
                             	<div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
@@ -186,7 +186,7 @@
 									human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
 									text-renderer="textRenderer">									
 								</div>
-                            <p class="title">Baja</p>
+                            <p class="title">Mensual</p>
                         </div>
                     </div>
                     <h3>Tendéncia del rendimiento</h3>
@@ -242,7 +242,7 @@
                                     human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
                                     text-renderer="textRenderer">                                   
                                 </div>
-                            <p class="title">Alta</p>
+                            <p class="title">Diario</p>
                         </div>
                         <div class="col-xs-6" align="center">
                                 <div justgage style="width:80px;height:70px;margin-top:-10px;" titlePosition="below"
@@ -264,7 +264,7 @@
                                     human-friendly="{{humanFriendly}}" human-friendly-decimal="{{humanFriendlyDecimal}}"
                                     text-renderer="textRenderer">                                   
                                 </div>
-                            <p class="title">Baja</p>
+                            <p class="title">Mensual</p>
                         </div>
                     </div>
                     <h3>Tendéncia del rendimiento</h3>
@@ -425,7 +425,7 @@
                                 <div class="col-xs-3 sepparated">
                                     <ul class="list-unstyled list-expedient-location">
                                         <li><strong>Provincia: </strong> Barcelona</li>
-                                        <li><strong>Municipio: </strong> Molins de Rei</li>
+                                        <li><strong>Municipio: </strong> {{townName}}</li>
                                     </ul>
                                 </div>
                                 <div class="col-xs-3 sepparated">
@@ -772,6 +772,7 @@
                     
                     //var top  = mainWindowPosition.top + mainWindowHeight + gutter;
                     var top = $("#townInfoPanel").position().top;
+                    if (top == 0) top = $("#sectorInfoPanel").position().top;
                     var left = gutter;
                     var right = rightWindowWidth + gutter + gutter;
 

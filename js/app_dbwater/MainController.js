@@ -310,7 +310,7 @@ Controller.$inject = [
     	function getTownValues(data) {
 
 			//performance
-			if(typeof data.message.performance!="undefined"){
+			/*if(typeof data.message.performance!="undefined"){
 				$scope.valueHigh	= Math.round(parseFloat(data.message.performance.high)*100);
 				$scope.valueLow		= Math.round(parseFloat(data.message.performance.low)*100);
 				$scope.valueGlobal	= Math.round(parseFloat(data.message.performance.global)*100);
@@ -319,7 +319,10 @@ Controller.$inject = [
 				$scope.valueHigh	= 0.80*100;
 				$scope.valueLow		= 0.50*100;
 				$scope.valueGlobal	= 0.65*100;
-			}
+			}*/
+			$scope.valueHigh	= 0;
+			$scope.valueLow		= 0;
+			$scope.valueGlobal	= 0;
 
 			//info
 			if(typeof data.message.info!="undefined"){
@@ -342,8 +345,9 @@ Controller.$inject = [
 			// bar chart fitxa "tendencia últimos 7 días"
 			if(typeof data.message.tendency!="undefined"){
 				$scope.labels_fitxa_rend = getLast7Dates();
+				//$scope.data_fitxa_rend = [data.message.tendency];
 				$scope.data_fitxa_rend = [
-					data.message.tendency
+					[0, 0, 0, 0, 0, 0, 0]
 				];
 				//console.log(data.message.tendency);
 			} else {
@@ -385,7 +389,7 @@ Controller.$inject = [
 					[8, 4, 0, 1, 6, 7, 9]
 				];
 			}
-			$scope.series_fitxa_vol = ['Aportado', 'Suministrado', 'Perdido'];
+			$scope.series_fitxa_vol = ['Suministrado', 'Aportado', 'Perdido'];
 			$scope.options_fitxa_vol = {
 		        scales: {
 		            xAxes: [{
