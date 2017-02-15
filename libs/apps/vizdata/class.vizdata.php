@@ -51,7 +51,7 @@ class Vizdata {
 	}
 
 	public function dbWaterListVolumenes($data){
-			$query 		= "SELECT * FROM web_results.service_volume_days('08MDR',8)";
+			$query 		= "SELECT * FROM web_results.service_volume_days('08MDR',9)";
 			$rs 		= $this->_system->pdo_select("bd1",$query);
 			$retorno	= array();
 			if(count($rs)>0){

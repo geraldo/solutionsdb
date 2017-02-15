@@ -1014,7 +1014,7 @@
                     var fechaBegin = $('#infoviz-datepicker1').datepicker("getDate"),
                         fechaEnd = $('#infoviz-datepicker2').datepicker("getDate"),
                         fechaBeginAbs = new Date("2017-02-07"),
-                        fechaEndAbs = new Date("2017-02-14");
+                        fechaEndAbs = new Date("2017-02-15");
 
                     //console.log("date",fechaBegin,fechaEnd,fechaBegin.valueOf(),fechaEnd.valueOf());
 
@@ -1087,7 +1087,7 @@
 
                     // temporalmente lo ponemos a junio- julio ya que son los meses donde tenemos datos               
                     onemonthago = new Date("2017-02-07");
-                    onedayago = new Date("2017-02-14");
+                    onedayago = new Date("2017-02-15");
                     /////////////
 
                     $('#infoviz-datepicker1').data({date: onemonthago});
