@@ -173,9 +173,9 @@ Controller.$inject = [
 				if(data.status==="Accepted"){  
 					//performance
 					if(typeof data.message.performance!="undefined"){
-						$scope.valueHigh	= parseFloat(data.message.performance.high)*100;
-						$scope.valueLow		= parseFloat(data.message.performance.low)*100;
-						$scope.valueGlobal	= parseFloat(data.message.performance.global)*100;
+						$scope.valueHigh	= Math.round(parseFloat(data.message.performance.high)*100);
+						$scope.valueLow		= Math.round(parseFloat(data.message.performance.low)*100);
+						$scope.valueGlobal	= Math.round(parseFloat(data.message.performance.global)*100);
 					} else {
 						//test values for service != 08MDR
 						$scope.valueHigh	= 0.80*100;
@@ -185,12 +185,12 @@ Controller.$inject = [
 
 					//info
 					if(typeof data.message.info!="undefined"){
-						$scope.valueSupplied	= parseFloat(data.message.info.supplied);
-						$scope.valueDistributed	= parseFloat(data.message.info.distributed);
-						$scope.valueLoses		= parseFloat(data.message.info.loses);
-						$scope.valueAvgFlow		= parseFloat(data.message.info.avg_flow);
-						$scope.valueNightFlow	= parseFloat(data.message.info.night_flow);
-						$scope.valueVolumePrice	= parseFloat(data.message.info.volume_price);
+						$scope.valueSupplied	= parseFloat(data.message.info.supplied).toFixed(2);
+						$scope.valueDistributed	= parseFloat(data.message.info.distributed).toFixed(2);
+						$scope.valueLoses		= parseFloat(data.message.info.loses).toFixed(2);
+						$scope.valueAvgFlow		= parseFloat(data.message.info.avg_flow).toFixed(2);
+						$scope.valueNightFlow	= parseFloat(data.message.info.night_flow).toFixed(2);
+						$scope.valueVolumePrice	= parseFloat(data.message.info.volume_price).toFixed(2);
 					} else {
 						//test values for service != 08MDR
 						$scope.valueSupplied	= 243;
@@ -202,11 +202,20 @@ Controller.$inject = [
 					}
 
 					// bar chart fitxa "tendencia últimos 7 días"
-					$scope.labels_fitxa_rend = ['28-10-2016', '29-10-2016', '30-10-2016', '31-10-2016', '01-11-2016', '02-11-2016', '03-11-2016'];
+					if(typeof data.message.tendency!="undefined"){
+						$scope.labels_fitxa_rend = getLast7Dates();
+						$scope.data_fitxa_rend = [
+							data.message.tendency
+						];
+						console.log(data.message.tendency);
+					} else {
+						//test values
+						$scope.labels_fitxa_rend = ['28-10-2016', '29-10-2016', '30-10-2016', '31-10-2016', '01-11-2016', '02-11-2016', '03-11-2016'];
+						$scope.data_fitxa_rend = [
+							[65, 59, 80, 81, 56, 55, 40]
+						];
+					}
 					$scope.series_fitxa_rend = ['Rendimiento'];
-					$scope.data_fitxa_rend = [
-									[65, 59, 80, 81, 56, 55, 40]
-					];
 					$scope.options_fitxa_rend = {
 				        scales: {
 				            xAxes: [{
@@ -223,15 +232,22 @@ Controller.$inject = [
 				        	yPadding: 5
 				        }
 				    };
-					
+
 					// line chart fitxa "Volumenes"
-					$scope.labels_fitxa_vol = ["January", "February", "March", "April", "May", "June", "July"];
-  					$scope.series_fitxa_vol = ['Aportado', 'Suministrado', 'Perdido'];
-					$scope.data_fitxa_vol = [
-						[65, 59, 80, 81, 56, 55, 40],
-						[28, 48, 40, 19, 86, 27, 90],
-						[8, 4, 0, 1, 6, 7, 9]
-					];
+					if(typeof data.message.volumenes7days!="undefined"){
+						$scope.labels_fitxa_vol = getLast7Dates();
+						$scope.data_fitxa_vol = data.message.volumenes7days;
+						console.log(data.message.volumenes7days);
+					} else {
+						//test data
+						$scope.labels_fitxa_vol = ["January", "February", "March", "April", "May", "June", "July"];
+						$scope.data_fitxa_vol = [
+							[65, 59, 80, 81, 56, 55, 40],
+							[28, 48, 40, 19, 86, 27, 90],
+							[8, 4, 0, 1, 6, 7, 9]
+						];
+					}
+  					$scope.series_fitxa_vol = ['Suministrado', 'Aportado', 'Perdido'];
 					$scope.options_fitxa_vol = {
 				        scales: {
 				            xAxes: [{
@@ -569,6 +585,18 @@ Controller.$inject = [
     	//***********************   HELPER METHODS   *********************
     	//****************************************************************
 		
+		//get dates
+		function getLast7Dates() {
+			var dates = [];
+			var date = new Date();
+			for (var i=1; i<=7; i++) {
+				date.setDate(date.getDate() - 1);
+				var month = date.getMonth()+1;
+				dates.push(date.getDate()+"-"+month+"-"+date.getFullYear());
+			}
+			return dates;
+		}
+
 		//log event
 		$scope.$on('logEvent', function (event, data){
 			if(data.extradata){

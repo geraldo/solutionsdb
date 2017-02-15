@@ -634,6 +634,7 @@ FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_se
 		}else{
 			$query.= "WHERE cmuni5_dgc='".$cmuni5_dgc."'";
 		}
+
 		//yesterday
 		$queryDay = $query." AND data BETWEEN CURRENT_DATE - interval '1 days' AND CURRENT_DATE";
 		//echo $finalquery;
@@ -643,32 +644,29 @@ FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_se
 		if(count($rs)>0){
 			$item['day']	= number_format($rs[0]['avg']*100,0);
 		}
-		//last week
 
+		//last week
 		$queryWeek = $query." AND data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
 		$rs 		= $this->_system->pdo_select("bd1",$queryWeek );
 		if(count($rs)>0){
 			$item['week']	= number_format($rs[0]['avg']*100,0);
 		}
-		//last month
 
+		//last month
 		$queryMonth = $query." AND data BETWEEN CURRENT_DATE - interval '30 days' AND CURRENT_DATE";
 		$rs 		= $this->_system->pdo_select("bd1",$queryMonth);
 		if(count($rs)>0){
 			$item['month']	= number_format($rs[0]['avg']*100,0);
 		}
-		
-		//last 7 days
 
+		//last 7 days
 		$queryLast7 = "SELECT AVG(service_diari.rt_alta) FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_service = carto.service_diari.service_code WHERE cmuni5_dgc = '".$cmuni5_dgc."' AND data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
 		$rs 		= $this->_system->pdo_select("bd1",$queryLast7);
 		if(count($rs)>0){
 			$item['last7']	= number_format($rs[0]['avg']*100,0);
 		}
 		
-		
 		//volumen suminstrado
-
 		$queryLastVolSum = "SELECT sum_suministrat FROM carto.service_diari AS sd INNER JOIN carto.municipios AS m ON sd.service_code = m.codi_service WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
 		$rs 		= $this->_system->pdo_select("bd1",$queryLastVolSum);
 		if(count($rs)>0){
@@ -676,7 +674,6 @@ FROM carto.municipios INNER JOIN carto.service_diari ON carto.municipios.codi_se
 		}
 		
 		//Volumen de pérdida diaria
-
 		$queryPerdida = "SELECT sum_rebuig FROM carto.service_diari AS sd INNER JOIN carto.municipios AS m ON sd.service_code = m.codi_service WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interval '7 days' AND CURRENT_DATE";
 		$rs 		= $this->_system->pdo_select("bd1",$queryPerdida);
 		if(count($rs)>0){
@@ -700,11 +697,22 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 
 			$row = $rs[0];
 			$record	= array(
-						"high"		=> round($row['high_performance'])/100,
-						"low"		=> round($row['theoric_low_performance'])/100,
-						"global"	=> round($row['theoric_global_performance'])/100
+						"high"		=> $row['high_performance'],
+						"low"		=> $row['theoric_low_performance'],
+						"global"	=> $row['theoric_global_performance']
 			);
 			$item['performance'] = $record;
+		}
+
+		//performance 7 days
+		$queryPerformance = "SELECT high_performance FROM web_results.service_performance_days('".$service_code."',7)";
+		$rs = $this->_system->pdo_select("bd1",$queryPerformance);
+		if(count($rs)>0){
+			$record = array();
+			foreach ($rs as $row) {
+				$record[] = round($row['high_performance']*100);
+			}
+			$item['tendency'] = $record;
 		}
 
 		//info
@@ -721,6 +729,21 @@ WHERE m.cmuni5_dgc = '".$cmuni5_dgc."' AND sd.data BETWEEN CURRENT_DATE - interv
 						"volume_price"	=> $row['volume_price']
 			);
 			$item['info'] = $record;
+		}
+
+		//volume 7 days
+		$queryVolume = "SELECT * FROM web_results.service_volume_days('".$service_code."',7)";
+		$rs = $this->_system->pdo_select("bd1",$queryVolume);
+		if(count($rs)>0){
+			$supplied = array();
+			$distributed = array();
+			$wasted = array();
+			foreach ($rs as $row) {
+				$supplied[] = round($row['supplied']);
+				$distributed[] = round($row['distributed']);
+				$wasted[] = round($row['wasted']);
+			}
+			$item['volumenes7days'] = array($distributed,$supplied,$wasted);
 		}
 
 		//volume
