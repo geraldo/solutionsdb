@@ -17,7 +17,7 @@
 						<?php
 						if($dbenergy){	
 						?>
-							<a href="https://n4.opendomo.com/admin/login" target="_blank">
+							<a href="https://aqualia.opendomo.com/" target="_blank">
 						<?php
 						}else{
 						?>
